@@ -83,6 +83,44 @@
         { "time_ms": 1500, "lane": 3, "note_type": "TAP" },
         { "time_ms": 1750, "lane": 4, "note_type": "TAP" }
       ]
+    },
+    {
+      "pattern_name": "Linear Stream (1234321)",
+      "notes": [
+        { "lane": 1, "time_ms": 0, "note_type": "TAP" },
+        { "lane": 2, "time_ms": 125, "note_type": "TAP" },
+        { "lane": 3, "time_ms": 250, "note_type": "TAP" },
+        { "lane": 4, "time_ms": 375, "note_type": "TAP" },
+        { "lane": 3, "time_ms": 500, "note_type": "TAP" },
+        { "lane": 2, "time_ms": 625, "note_type": "TAP" },
+        { "lane": 1, "time_ms": 750, "note_type": "TAP" }
+      ]
+    },
+    {
+      "pattern_name": "Alternating Split (13241324)",
+      "notes": [
+        { "time_ms": 0, "lane": 1, "note_type": "TAP" },
+        { "time_ms": 125, "lane": 3, "note_type": "TAP" },
+        { "time_ms": 250, "lane": 2, "note_type": "TAP" },
+        { "time_ms": 375, "lane": 4, "note_type": "TAP" },
+        { "time_ms": 500, "lane": 1, "note_type": "TAP" },
+        { "time_ms": 625, "lane": 3, "note_type": "TAP" },
+        { "time_ms": 750, "lane": 2, "note_type": "TAP" },
+        { "time_ms": 875, "lane": 4, "note_type": "TAP" }
+      ]
+    },
+    {
+      "pattern_name": "Inward-Outward (14231423)",
+      "notes": [
+        { "lane": 1, "time_ms": 0, "note_type": "TAP" },
+        { "lane": 4, "time_ms": 125, "note_type": "TAP" },
+        { "lane": 2, "time_ms": 250, "note_type": "TAP" },
+        { "lane": 3, "time_ms": 375, "note_type": "TAP" },
+        { "lane": 1, "time_ms": 500, "note_type": "TAP" },
+        { "lane": 4, "time_ms": 625, "note_type": "TAP" },
+        { "lane": 2, "time_ms": 750, "note_type": "TAP" },
+        { "lane": 3, "time_ms": 875, "note_type": "TAP" }
+      ]
     }
   ]
 }
