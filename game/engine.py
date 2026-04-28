@@ -388,7 +388,7 @@ class GameEngine:
             y = int(80 + travel_progress * (self.config.height - 220))
             x = (note.lane - 1) * lane_width + lane_width // 2 - 18
             color = {
-                "TAP": (240, 180, 40),
+                "TAP": (135, 206, 250),
                 "HOLD": (80, 200, 255),
                 "SLIDE": (80, 220, 140),
                 "AIR": (200, 160, 255),
@@ -399,7 +399,9 @@ class GameEngine:
                 points = [(x, y - 18), (x - 16, y + 12), (x + 16, y + 12)]
                 pygame.draw.polygon(self.screen, color, points)
             else:
-                pygame.draw.circle(self.screen, color, (x, y), 18)
+                note_rect = pygame.Rect(x - 24, y - 12, 48, 24)
+                pygame.draw.rect(self.screen, color, note_rect, border_radius=8)
+                pygame.draw.rect(self.screen, (255, 255, 255), note_rect, width=2, border_radius=8)
         label = self.font.render(f"BPM {self.config.bpm} | {self.last_judgment} | Combo {self.combo}", True, (240, 240, 240))
         self.screen.blit(label, (24, 24))
         if self._total_notes > 0:
