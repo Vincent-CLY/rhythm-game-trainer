@@ -1,13 +1,26 @@
 from __future__ import annotations
-
 from dataclasses import dataclass, field
-
 import pygame
+import lgpio
 
-from gpio_mock import GPIO
+SENSORS = {
+    "Sensor 1": 22,
+    "Sensor 2": 4,
+    "Sensor 3": 27,
+    "Sensor 4": 17,
+}
 
+ZONE_PINS = {
+    1: SENSORS["Sensor 1"],
+    2: SENSORS["Sensor 2"],
+    3: SENSORS["Sensor 3"],
+    4: SENSORS["Sensor 4"],
+}
 
-ZONE_PINS = {1: 17, 2: 18, 3: 27, 4: 22}
+# Open GPIO chip once at module level
+_GPIO_HANDLE = lgpio.gpiochip_open(0)
+for _pin in ZONE_PINS.values():
+    lgpio.gpio_claim_input(_GPIO_HANDLE, _pin)
 
 
 @dataclass(slots=True)
@@ -28,70 +41,69 @@ class InputSnapshot:
 
 class InputHandler:
     def __init__(self) -> None:
-        self._previous_gpio_state: dict[int, int] = {zone: GPIO.LOW for zone in ZONE_PINS}
+        self._previous_gpio_state: dict[int, int] = {zone: 0 for zone in ZONE_PINS}
         self._active_zones: set[int] = set()
-        try:
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setwarnings(False)
-            for pin in ZONE_PINS.values():
-                GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        except Exception:
-            pass
 
     def poll(self, timestamp_ms: int) -> InputSnapshot:
         events: list[InputEvent] = []
         quit_requested = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit_requested = True
             elif event.type == pygame.KEYDOWN:
-                zone = self._key_to_zone(event.key)
-                if zone is not None:
-                    self._active_zones.add(zone)
-                    events.append(InputEvent(zone=zone, pressed=True, timestamp_ms=timestamp_ms))
-                elif event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE:
                     events.append(InputEvent(is_air=True, pressed=True, timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_UP, pygame.K_w):
+                    events.append(InputEvent(action="menu_up", timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_DOWN, pygame.K_s):
+                    events.append(InputEvent(action="menu_down", timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_LEFT, pygame.K_a):
+                    events.append(InputEvent(action="menu_left", timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_RIGHT, pygame.K_d):
+                    events.append(InputEvent(action="menu_right", timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                    events.append(InputEvent(action="menu_select", timestamp_ms=timestamp_ms))
+                elif event.key == pygame.K_BACKSPACE:
+                    events.append(InputEvent(action="menu_back", timestamp_ms=timestamp_ms))
                 elif event.key in (pygame.K_ESCAPE, pygame.K_q):
                     quit_requested = True
                 elif event.key == pygame.K_r:
                     events.append(InputEvent(action="restart", timestamp_ms=timestamp_ms))
-            elif event.type == pygame.KEYUP:
-                zone = self._key_to_zone(event.key)
-                if zone is not None:
-                    self._active_zones.discard(zone)
-                    events.append(InputEvent(zone=zone, pressed=False, timestamp_ms=timestamp_ms))
+
         events.extend(self._poll_gpio(timestamp_ms))
-        return InputSnapshot(events=events, quit_requested=quit_requested, active_zones=set(self._active_zones))
+        return InputSnapshot(
+            events=events,
+            quit_requested=quit_requested,
+            active_zones=set(self._active_zones)
+        )
 
     def _poll_gpio(self, timestamp_ms: int) -> list[InputEvent]:
         events: list[InputEvent] = []
         for zone, pin in ZONE_PINS.items():
             try:
-                current_state = GPIO.input(pin)
+                current_state = lgpio.gpio_read(_GPIO_HANDLE, pin)
             except Exception:
                 continue
+
             previous_state = self._previous_gpio_state[zone]
-            if current_state == GPIO.HIGH:
+
+            if current_state == 1:
                 self._active_zones.add(zone)
             else:
                 self._active_zones.discard(zone)
+
             if current_state != previous_state:
                 self._previous_gpio_state[zone] = current_state
-                events.append(InputEvent(zone=zone, pressed=current_state == GPIO.HIGH, timestamp_ms=timestamp_ms))
+                events.append(InputEvent(
+                    zone=zone,
+                    pressed=(current_state == 1),
+                    timestamp_ms=timestamp_ms
+                ))
         return events
 
     def close(self) -> None:
         try:
-            GPIO.cleanup()
+            lgpio.gpiochip_close(_GPIO_HANDLE)
         except Exception:
             pass
-
-    @staticmethod
-    def _key_to_zone(key: int) -> int | None:
-        key_to_zone = {
-            pygame.K_1: 1,
-            pygame.K_2: 2,
-            pygame.K_3: 3,
-            pygame.K_4: 4,
-        }
-        return key_to_zone.get(key)

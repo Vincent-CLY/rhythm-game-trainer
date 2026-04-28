@@ -28,6 +28,10 @@ class SessionRecorder:
     session_id: str = field(default_factory=lambda: uuid4().hex)
     _rows: list[dict[str, object]] = field(default_factory=list)
 
+    @property
+    def rows(self) -> list[dict[str, object]]:
+        return list(self._rows)
+
     def record(self, **row: object) -> None:
         self._rows.append(row)
 

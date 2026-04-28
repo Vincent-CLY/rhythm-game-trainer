@@ -85,7 +85,7 @@
       ]
     },
     {
-      "pattern_name": "Linear Stream (1234321)",
+      "name": "Linear Stream (1234321)",
       "notes": [
         { "lane": 1, "time_ms": 0, "note_type": "TAP" },
         { "lane": 2, "time_ms": 125, "note_type": "TAP" },
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "pattern_name": "Alternating Split (13241324)",
+      "name": "Alternating Split (13241324)",
       "notes": [
         { "time_ms": 0, "lane": 1, "note_type": "TAP" },
         { "time_ms": 125, "lane": 3, "note_type": "TAP" },
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "pattern_name": "Inward-Outward (14231423)",
+      "name": "Inward-Outward (14231423)",
       "notes": [
         { "lane": 1, "time_ms": 0, "note_type": "TAP" },
         { "lane": 4, "time_ms": 125, "note_type": "TAP" },

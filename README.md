@@ -20,9 +20,10 @@ Use `--headless` to avoid fullscreen mode while developing on Windows.
 
 ## Controls
 
-- `1` `2` `3` `4`: Zone 1-4
-- `Space`: AIR (hand raise)
-- `R`: Restart after a session
+- GPIO zones: Lane inputs (tap only)
+- `Up/Down/Left/Right` + `Enter`: Menu navigation
+- GPIO zones `1/2/3/4`: Menu up/down/select/back
+- `R`: Retry after a session
 - `Esc`: Quit
 
 ## Charts
