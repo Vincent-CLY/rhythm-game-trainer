@@ -44,6 +44,8 @@ NOTE_TRAVEL_STEP_MS = 100
 INPUT_OFFSET_MIN_MS = -300
 INPUT_OFFSET_MAX_MS = 300
 INPUT_OFFSET_STEP_MS = 10
+# [CHANGE] 按住 button2 超過此時間就換 active param（Settings 畫面）
+HOLD_SWAP_MS = 500
 
 # HOME_MENU 第 4 項係 "Settings"（4-lane 調校畫面）
 HOME_MENU = (
@@ -123,6 +125,9 @@ class GameEngine:
         self._tuning_note_start_ms = 0
         self._tuning_last_adjust_ms = 0
         self._tuning_tap_pending: int = 0
+        # [CHANGE] 按住 button2 換 param 所需狀態
+        self._tuning_zone2_hold_start_ms: int = 0
+        self._tuning_param_swapped: bool = False
         # Session 狀態
         self._session_complete = True
         self._session_saved = True
@@ -147,6 +152,8 @@ class GameEngine:
         self._total_notes = 0
         self._hit_notes = 0
         self._perfect_notes = 0
+        # [CHANGE] Miss 相片路徑列表，每個 session 開始時清空
+        self._miss_photos: list[str] = []
         # [CHANGE] Miss 相片路徑列表，每個 session 開始時清空
         self._miss_photos: list[str] = []
         # 初始值避免 run() 第一 frame AttributeError；_reset_session 會覆蓋
@@ -923,6 +930,9 @@ class GameEngine:
         self._tuning_note_start_ms = pygame.time.get_ticks() - self.start_ticks
         self._tuning_last_adjust_ms = self._tuning_note_start_ms
         self._tuning_tap_pending = 0
+        # [CHANGE] reset hold-to-swap state every time settings page is opened
+        self._tuning_zone2_hold_start_ms = 0
+        self._tuning_param_swapped = False
         self._set_last_judgment("", self._tuning_note_start_ms)
         self._ui_state = "tuning"
 
@@ -933,6 +943,9 @@ class GameEngine:
             self._ui_state = "home"
         elif event.zone == 2:
             now_ms = pygame.time.get_ticks() - self.start_ticks
+            # [CHANGE] 記錄 zone2 按下時間，reset 換參標記，短按仍維持 hit 邏輯
+            self._tuning_zone2_hold_start_ms = now_ms
+            self._tuning_param_swapped = False
             self._handle_tuning_press(now_ms)
         elif event.zone == 1:
             self._tuning_tap_pending = -1
@@ -953,6 +966,14 @@ class GameEngine:
         if self._tuning_tap_pending != 0:
             self._apply_tuning_step(self._tuning_tap_pending)
             self._tuning_tap_pending = 0
+        # [CHANGE] 按住 button2 超過 HOLD_SWAP_MS 就換 active param（只換一次）
+        if (
+            2 in self._active_zones
+            and not self._tuning_param_swapped
+            and now_ms - self._tuning_zone2_hold_start_ms >= HOLD_SWAP_MS
+        ):
+            self._swap_tuning_param()
+            self._tuning_param_swapped = True
         hold_interval_ms = 80
         if now_ms - self._tuning_last_adjust_ms < hold_interval_ms:
             return
@@ -979,6 +1000,13 @@ class GameEngine:
                 INPUT_OFFSET_MIN_MS,
                 min(INPUT_OFFSET_MAX_MS, self.input_offset_ms + direction * INPUT_OFFSET_STEP_MS),
             )
+
+    def _swap_tuning_param(self) -> None:
+        # [CHANGE] 切換 active param：input_offset_ms ↔ note_travel_ms
+        if self._tuning_param == "input_offset_ms":
+            self._tuning_param = "note_travel_ms"
+        else:
+            self._tuning_param = "input_offset_ms"
 
     def _draw_tuning(self, now_ms: int) -> None:
         """
