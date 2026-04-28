@@ -5,9 +5,9 @@ import lgpio
 
 SENSORS = {
     "Sensor 1": 22,
-    "Sensor 2": 4,
+    "Sensor 2": 17,
     "Sensor 3": 27,
-    "Sensor 4": 17,
+    "Sensor 4": 4,
 }
 
 ZONE_PINS = {
