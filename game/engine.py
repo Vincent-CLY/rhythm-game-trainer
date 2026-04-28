@@ -103,6 +103,9 @@ class GameEngine:
         self.title_font = pygame.font.SysFont("Arial", 56, bold=True)
         # 大號 * 用於 offset chart marker
         self.marker_font = pygame.font.SysFont("Arial", 30, bold=True)
+        # Tiny font for chart axis labels — keeps chart clean
+        self.tiny_font = pygame.font.SysFont("Arial", 17)
+        self.chart_title_font = pygame.font.SysFont("Arial", 22, bold=True)
         self.chart = load_chart(config.chart_path)
         self.input_handler = InputHandler()
         self.air_detector = AirDetector()
@@ -860,9 +863,12 @@ class GameEngine:
             self.screen.blit(label_surf, (40, strip_y))
             thumb_h = photo_strip_h - 30
             thumb_w = int(thumb_h * 4 / 3)
+            # [CHANGE] Reserve space for "+N" overflow indicator
+            OVERFLOW_RESERVE = 54
             x_cursor = 40
+            photos_shown = 0
             for photo_path_str in miss_photos:
-                if x_cursor + thumb_w > self.config.width - 40:
+                if x_cursor + thumb_w > self.config.width - 40 - OVERFLOW_RESERVE:
                     break
                 photo_path = Path(photo_path_str)
                 if photo_path.exists():
@@ -871,7 +877,6 @@ class GameEngine:
                         img = pygame.transform.scale(img, (thumb_w, thumb_h))
                         self.screen.blit(img, (x_cursor, strip_y + 28))
                     except Exception:
-                        # 相片載入失敗：顯示紅色佔位方塊
                         pygame.draw.rect(
                             self.screen,
                             (60, 30, 30),
@@ -885,13 +890,25 @@ class GameEngine:
                             ),
                         )
                 x_cursor += thumb_w + 8
+                photos_shown += 1
+            # [CHANGE] Show "+N more" if photos overflow the strip
+            remaining = len(miss_photos) - photos_shown
+            if remaining > 0:
+                more_surf = self.font.render(f"+{remaining}", True, (255, 110, 110))
+                self.screen.blit(
+                    more_surf,
+                    more_surf.get_rect(
+                        midleft=(x_cursor + 4, strip_y + 28 + thumb_h // 2)
+                    ),
+                )
 
         offsets = summary.get("offsets", [])
         judgments_list = summary.get("judgments_per_note", [])
         if isinstance(offsets, list) and len(offsets) >= 1:
-            chart_top = 370
-            # [CHANGE] 如果有相片，offset chart 底部要留空俾相片條
-            chart_bottom = self.config.height - 60 - photo_strip_h
+            # [CHANGE] Push chart_top down to leave room for title above
+            chart_top = 400
+            # 如果有相片，offset chart 底部要留空俾相片條
+            chart_bottom = self.config.height - 60 - photo_strip_h - 14  # [CHANGE] gap above photo strip
             chart_rect = pygame.Rect(40, chart_top, self.config.width - 80, chart_bottom - chart_top)
             if chart_rect.height > 20:
                 self._draw_offset_chart(offsets, judgments_list, chart_rect)
@@ -1087,21 +1104,19 @@ class GameEngine:
 
     def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
         """
-        Offset chart 改良版 v2：
-        - 彩色 judgment 背景帶（Perfect/Great/Good/Bad/Miss）
-        - Y 軸標題移到 chart 上方，唔再 overlap 圖表
-        - 右側 band 標籤
-        - 自動 Y 軸範圍 + 刻度
-        - 粗線（3px）+ 大 * marker（judgment 顏色）
+        Offset chart v5:
+        - tiny_font for all axis labels (left numbers + right band names)
+        - Right-side band labels centred in right margin column
+        - Miss label clip loosened so it always shows
+        - Styled chart title (chart_title_font, gold, centred above plot)
         """
         if not offsets:
             return
 
-        # ── 動態 Y 範圍 ──
+        # ── Y range ──
         actual_max = max(abs(o) for o in offsets)
         if actual_max == 0:
             actual_max = 10
-
         if actual_max <= 30:
             max_abs, tick_interval = 30, 10
         elif actual_max <= 50:
@@ -1112,110 +1127,146 @@ class GameEngine:
             max_abs, tick_interval = 150, 50
         elif actual_max <= 200:
             max_abs, tick_interval = 200, 50
-        elif actual_max <= 300:
-            max_abs, tick_interval = 300, 50
-        elif actual_max <= 400:
-            max_abs, tick_interval = 400, 100
         else:
-            max_abs = min(500, ((actual_max + 99) // 100) * 100)
-            tick_interval = 100
+            max_abs, tick_interval = 250, 50
 
-        # 左邊留白給 Y 軸數字；右側留白給 band 標籤
-        left_margin = 58
-        right_margin = 62
-        plot_left = rect.left + left_margin
-        plot_right = rect.right - right_margin
-        plot_width = plot_right - plot_left
+        # Margins — right margin wide enough to comfortably centre labels
+        left_margin  = 52
+        right_margin = 68
+        plot_left    = rect.left  + left_margin
+        plot_right   = rect.right - right_margin
+        plot_width   = plot_right - plot_left
+        right_cx     = (plot_right + rect.right) // 2   # centre of right margin column
 
-        mid_y = rect.top + rect.height // 2
-        scale_y = (rect.height // 2 - 8) / max_abs if max_abs > 0 else 1.0
+        INNER_PAD = 3
+        mid_y     = rect.top + rect.height // 2
+        half_h    = rect.height // 2 - INNER_PAD
+        scale_y   = half_h / max_abs if max_abs > 0 else 1.0
 
-        # ── [CHANGE] Y 軸標題移到 chart 上方，唔 overlap 圖表 ──
-        title_surf = self.small_font.render("offset to perfect (ms)", True, (180, 180, 200))
-        self.screen.blit(title_surf, (rect.left, rect.top - title_surf.get_height() - 2))
+        # ── [CHANGE] Styled chart title — larger, gold, centred above plot ──
+        title_surf = self.chart_title_font.render("Offset to Perfect  (ms)", True, (240, 210, 90))
+        title_x    = plot_left + (plot_width - title_surf.get_width()) // 2
+        title_y    = rect.top - title_surf.get_height() - 3
+        # subtle dark pill behind title for legibility
+        pad = 8
+        bg_rect = pygame.Rect(title_x - pad, title_y - 2,
+                              title_surf.get_width() + pad * 2,
+                              title_surf.get_height() + 4)
+        pygame.draw.rect(self.screen, (14, 14, 24), bg_rect, border_radius=5)
+        self.screen.blit(title_surf, (title_x, title_y))
 
-        # ── [CHANGE] 畫背景 ──
+        # ── Background ──
         pygame.draw.rect(self.screen, (22, 22, 36), rect)
 
-        # ── [CHANGE] Judgment 背景色帶 (由外到內，逐層覆蓋) ──
-        # 判定範圍來自 judgment.py： Perfect=±50, Great=±90, Good=±130, Bad=±170
-        PERFECT_W = 50
+        # ── Judgment bands ──
+        PERFECT_W = 60
         GREAT_W   = 90
         GOOD_W    = 130
         BAD_W     = 170
+        MISS_CAP  = 250
         judgment_bands = [
-            (max_abs,  (42, 14, 14)),   # Miss  — 深紅
-            (BAD_W,    (56, 38, 14)),   # Bad   — 深橙
-            (GOOD_W,   (18, 52, 18)),   # Good  — 深綠
-            (GREAT_W,  (14, 34, 62)),   # Great — 深藍
-            (PERFECT_W,(60, 52, 8)),    # Perfect — 深金
+            (MISS_CAP,  (42, 14, 14)),
+            (BAD_W,     (56, 38, 14)),
+            (GOOD_W,    (18, 52, 18)),
+            (GREAT_W,   (14, 34, 62)),
+            (PERFECT_W, (60, 52,  8)),
         ]
         for half_ms, band_col in judgment_bands:
-            hw = min(half_ms, max_abs)
-            y_top = int(mid_y - hw * scale_y)
-            y_bot = int(mid_y + hw * scale_y)
-            h = y_bot - y_top
-            if h > 0:
-                pygame.draw.rect(self.screen, band_col, (plot_left, y_top, plot_width, h))
+            hw     = min(half_ms, max_abs)
+            y_tc   = max(int(mid_y - hw * scale_y), rect.top  + INNER_PAD)
+            y_bc   = min(int(mid_y + hw * scale_y), rect.bottom - INNER_PAD)
+            if y_bc > y_tc:
+                pygame.draw.rect(self.screen, band_col,
+                                 (plot_left, y_tc, plot_width, y_bc - y_tc))
 
-        # ── Chart 邊框 ──
+        # ── Border ──
         pygame.draw.rect(self.screen, (60, 60, 80), rect, width=2)
 
-        # ── [CHANGE] 右側 band 標籤 ──
-        label_x = plot_right + 4
+        # ── Band labels — each label centred VERTICALLY inside its own band ──
+        #   (top_ms, bottom_ms) defines the band; label is placed at band centre.
+        #   This gives balanced visual gaps instead of crowding labels at boundaries.
         band_label_info = [
-            (PERFECT_W, "Perfect", (220, 200, 80)),
-            (GREAT_W,   "Great",   (100, 185, 230)),
-            (GOOD_W,    "Good",    (100, 210, 120)),
-            (BAD_W,     "Bad",     (220, 155, 80)),
-            (max_abs,   "Miss",    (220, 80,  80)),
+            (MISS_CAP,  BAD_W,     "Miss",    (220,  80,  80)),   # 170–250 ms
+            (BAD_W,     GOOD_W,    "Bad",     (220, 155,  80)),   # 130–170 ms
+            (GOOD_W,    GREAT_W,   "Good",    (100, 210, 120)),   #  90–130 ms
+            (GREAT_W,   PERFECT_W, "Great",   (100, 185, 230)),   #  60–90 ms
+            (PERFECT_W, 0,         "Perfect", (220, 200,  80)),   #   0–60 ms
         ]
-        for ms_val, lbl, lbl_col in band_label_info:
-            ms_clamped = min(ms_val, max_abs)
-            ty = int(mid_y - ms_clamped * scale_y)
-            if rect.top <= ty <= rect.bottom:
-                ls = self.small_font.render(lbl, True, lbl_col)
-                self.screen.blit(ls, (label_x, ty))
+        tiny_h = self.tiny_font.get_height()
+        for top_ms, bot_ms, lbl, lbl_col in band_label_info:
+            # vertical centre of this band in ms (clamped to visible range)
+            centre_ms  = (min(top_ms, max_abs) + min(bot_ms, max_abs)) / 2
+            ty         = int(mid_y - centre_ms * scale_y)
+            ty_clamped = max(rect.top + 1, min(ty, rect.bottom - tiny_h - 1))
+            ls  = self.tiny_font.render(lbl, True, lbl_col)
+            lx  = right_cx - ls.get_width() // 2
+            self.screen.blit(ls, (lx, ty_clamped))
 
-        # ── Tick 線 + Y 軸數字 ──
+        # ── [CHANGE] Tick lines + Y numbers — tiny_font, centred in left margin ──
+        left_cx   = rect.left + left_margin // 2    # centre of left margin column
         tick_vals = list(range(-max_abs, max_abs + 1, tick_interval))
         for tv in tick_vals:
             ty = int(mid_y - tv * scale_y)
-            if ty < rect.top or ty > rect.bottom:
+            if not (rect.top + INNER_PAD <= ty <= rect.bottom - INNER_PAD):
                 continue
             line_col = (130, 130, 80) if tv == 0 else (55, 55, 72)
-            line_w = 2 if tv == 0 else 1
+            line_w   = 2 if tv == 0 else 1
             pygame.draw.line(self.screen, line_col, (plot_left, ty), (plot_right, ty), line_w)
-            txt_surf = self.small_font.render(f"{tv:+d}" if tv != 0 else "0", True, (160, 160, 185))
-            txt_rect = txt_surf.get_rect(midright=(plot_left - 4, ty))
-            self.screen.blit(txt_surf, txt_rect)
+            label_txt = f"{tv:+d}" if tv != 0 else "0"
+            txt_surf  = self.tiny_font.render(label_txt, True, (160, 160, 185))
+            # [CHANGE] horizontally centred in left margin column
+            txt_rect  = txt_surf.get_rect(center=(left_cx, ty))
+            # [FIX] clip on full text bbox so numbers never overflow rect edges
+            if txt_rect.top >= rect.top and txt_rect.bottom <= rect.bottom:
+                self.screen.blit(txt_surf, txt_rect)
 
-        # ── 計算各 note 像素位置 ──
-        n = len(offsets)
-        if n == 1:
-            xs = [plot_left + plot_width // 2]
-        else:
-            xs = [plot_left + int(i * plot_width / (n - 1)) for i in range(n)]
-
+        # ── Pixel positions; clamp out-of-range ──
+        n  = len(offsets)
+        xs = (
+            [plot_left + plot_width // 2]
+            if n == 1
+            else [plot_left + int(i * plot_width / (n - 1)) for i in range(n)]
+        )
         points: list[tuple[int, int]] = []
+        clamped_flags: list[bool] = []
         for i, offset in enumerate(offsets):
+            is_clamped = abs(offset) > max_abs
+            clamped    = max(-max_abs, min(max_abs, offset))
             px = xs[i]
-            clamped = max(-max_abs, min(max_abs, offset))
             py = int(mid_y - clamped * scale_y)
+            py = max(rect.top + INNER_PAD + 4, min(rect.bottom - INNER_PAD - 4, py))
             points.append((px, py))
+            clamped_flags.append(is_clamped)
 
-        # ── 粗連接線（3px）──
+        # ── Connection line ──
         if len(points) >= 2:
-            pygame.draw.lines(self.screen, (85, 85, 115), False, points, 3)
+            pygame.draw.lines(self.screen, (85, 85, 115), False, points, 2)
 
-        # ── 大 * marker，以 judgment 顏色區分 ──
+        # ── Asterisk markers (3 manual lines, exactly centred at data point) ──
+        STAR_ARMS = (
+            ((-6,  0), ( 6,  0)),
+            ((-3, -5), ( 3,  5)),
+            (( 3, -5), (-3,  5)),
+        )
         for i, (px, py) in enumerate(points):
             judgment = judgments_list[i] if i < len(judgments_list) else "Miss"
-            color = JUDGMENT_COLORS.get(judgment, (220, 220, 220))
-            star = self.marker_font.render("*", True, color)
-            star_rect = star.get_rect(center=(px, py))
-            self.screen.blit(star, star_rect)
-
+            color    = JUDGMENT_COLORS.get(judgment, (220, 220, 220))
+            if clamped_flags[i]:
+                # [FIX] clamped note: larger asterisk (r=8) so it is distinct but consistent
+                CLAMPED_ARMS = (
+                    ((-8,  0), ( 8,  0)),
+                    ((-4, -7), ( 4,  7)),
+                    (( 4, -7), (-4,  7)),
+                )
+                for (dx1, dy1), (dx2, dy2) in CLAMPED_ARMS:
+                    pygame.draw.line(self.screen, color,
+                                     (px + dx1, py + dy1),
+                                     (px + dx2, py + dy2), 2)
+            else:
+                for (dx1, dy1), (dx2, dy2) in STAR_ARMS:
+                    pygame.draw.line(self.screen, color,
+                                     (px + dx1, py + dy1),
+                                     (px + dx2, py + dy2), 2)
     # ─── CHART HELPERS ───────────────────────────────────────────────────────
 
     def _current_performance(self) -> dict[str, object] | None:
