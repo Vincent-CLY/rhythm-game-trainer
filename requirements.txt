@@ -1,2 +1,5 @@
 pygame>=2.5
 matplotlib>=3.8
+# Camera support (choose one based on your hardware):
+#   USB webcam:          pip install opencv-python-headless
+#   RPi CSI camera:      sudo apt install -y python3-picamera2 python3-numpy

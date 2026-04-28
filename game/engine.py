@@ -673,6 +673,8 @@ class GameEngine:
                 / self.recorder.session_id
                 / f"miss_{miss_index}.jpg"
             )
+            # [CHANGE] 就算 camera 唔可用，都確保資料夾存在
+            photo_path.parent.mkdir(parents=True, exist_ok=True)
             if self.air_detector.capture_still(photo_path):
                 self._miss_photos.append(str(photo_path))
         else:
@@ -1085,17 +1087,15 @@ class GameEngine:
 
     def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
         """
-        Offset chart 改良版：
-        - 自動 Y 軸範圍 + 更多刻度（gap 越大，刻度越密）
-        - 粗線（3px）+ 大 * marker（marker_font）
-        - 左邊留白顯示 ms 刻度，右對齊
-        - Y 軸標籤「offset to perfect (ms)」
+        Offset chart 改良版 v2：
+        - 彩色 judgment 背景帶（Perfect/Great/Good/Bad/Miss）
+        - Y 軸標題移到 chart 上方，唔再 overlap 圖表
+        - 右側 band 標籤
+        - 自動 Y 軸範圍 + 刻度
+        - 粗線（3px）+ 大 * marker（judgment 顏色）
         """
         if not offsets:
             return
-
-        pygame.draw.rect(self.screen, (22, 22, 36), rect)
-        pygame.draw.rect(self.screen, (60, 60, 80), rect, width=2)
 
         # ── 動態 Y 範圍 ──
         actual_max = max(abs(o) for o in offsets)
@@ -1120,34 +1120,77 @@ class GameEngine:
             max_abs = min(500, ((actual_max + 99) // 100) * 100)
             tick_interval = 100
 
-        # 左邊留白給 Y 軸 label（最長係 "-200" = 約 50px）
+        # 左邊留白給 Y 軸數字；右側留白給 band 標籤
         left_margin = 58
+        right_margin = 62
         plot_left = rect.left + left_margin
-        plot_right = rect.right - 4
+        plot_right = rect.right - right_margin
         plot_width = plot_right - plot_left
 
         mid_y = rect.top + rect.height // 2
         scale_y = (rect.height // 2 - 8) / max_abs if max_abs > 0 else 1.0
 
-        # ── Y 軸標題 ──
-        title_surf = self.small_font.render("offset to perfect (ms)", True, (140, 140, 160))
-        self.screen.blit(title_surf, (plot_left + 4, rect.top + 4))
+        # ── [CHANGE] Y 軸標題移到 chart 上方，唔 overlap 圖表 ──
+        title_surf = self.small_font.render("offset to perfect (ms)", True, (180, 180, 200))
+        self.screen.blit(title_surf, (rect.left, rect.top - title_surf.get_height() - 2))
 
-        # ── Tick 線 + 數字 ──
+        # ── [CHANGE] 畫背景 ──
+        pygame.draw.rect(self.screen, (22, 22, 36), rect)
+
+        # ── [CHANGE] Judgment 背景色帶 (由外到內，逐層覆蓋) ──
+        # 判定範圍來自 judgment.py： Perfect=±50, Great=±90, Good=±130, Bad=±170
+        PERFECT_W = 50
+        GREAT_W   = 90
+        GOOD_W    = 130
+        BAD_W     = 170
+        judgment_bands = [
+            (max_abs,  (42, 14, 14)),   # Miss  — 深紅
+            (BAD_W,    (56, 38, 14)),   # Bad   — 深橙
+            (GOOD_W,   (18, 52, 18)),   # Good  — 深綠
+            (GREAT_W,  (14, 34, 62)),   # Great — 深藍
+            (PERFECT_W,(60, 52, 8)),    # Perfect — 深金
+        ]
+        for half_ms, band_col in judgment_bands:
+            hw = min(half_ms, max_abs)
+            y_top = int(mid_y - hw * scale_y)
+            y_bot = int(mid_y + hw * scale_y)
+            h = y_bot - y_top
+            if h > 0:
+                pygame.draw.rect(self.screen, band_col, (plot_left, y_top, plot_width, h))
+
+        # ── Chart 邊框 ──
+        pygame.draw.rect(self.screen, (60, 60, 80), rect, width=2)
+
+        # ── [CHANGE] 右側 band 標籤 ──
+        label_x = plot_right + 4
+        band_label_info = [
+            (PERFECT_W, "Perfect", (220, 200, 80)),
+            (GREAT_W,   "Great",   (100, 185, 230)),
+            (GOOD_W,    "Good",    (100, 210, 120)),
+            (BAD_W,     "Bad",     (220, 155, 80)),
+            (max_abs,   "Miss",    (220, 80,  80)),
+        ]
+        for ms_val, lbl, lbl_col in band_label_info:
+            ms_clamped = min(ms_val, max_abs)
+            ty = int(mid_y - ms_clamped * scale_y)
+            if rect.top <= ty <= rect.bottom:
+                ls = self.small_font.render(lbl, True, lbl_col)
+                self.screen.blit(ls, (label_x, ty))
+
+        # ── Tick 線 + Y 軸數字 ──
         tick_vals = list(range(-max_abs, max_abs + 1, tick_interval))
         for tv in tick_vals:
             ty = int(mid_y - tv * scale_y)
             if ty < rect.top or ty > rect.bottom:
                 continue
-            line_col = (130, 130, 80) if tv == 0 else (65, 65, 88)
+            line_col = (130, 130, 80) if tv == 0 else (55, 55, 72)
             line_w = 2 if tv == 0 else 1
             pygame.draw.line(self.screen, line_col, (plot_left, ty), (plot_right, ty), line_w)
-            # 右對齊數字
             txt_surf = self.small_font.render(f"{tv:+d}" if tv != 0 else "0", True, (160, 160, 185))
             txt_rect = txt_surf.get_rect(midright=(plot_left - 4, ty))
             self.screen.blit(txt_surf, txt_rect)
 
-        # ── 計算各 note 的像素位置 ──
+        # ── 計算各 note 像素位置 ──
         n = len(offsets)
         if n == 1:
             xs = [plot_left + plot_width // 2]
