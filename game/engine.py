@@ -1,4 +1,4 @@
-# game/engine.py  ── 完整替換版本
+# game/engine.py
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -35,7 +35,7 @@ JUDGMENT_LINE_OFFSET = 120
 JUDGMENT_DISPLAY_MS = 900
 NOTE_HEIGHT = 40
 
-# 開場倒數：notes 會 offset 呢個 ms 之後先出現，避免第一批 notes 被即刻 expire / 一入場就喺判定線
+# 開場 lead-in：note time_ms 統一向後推，保證第一批 note 唔會喺入場瞬間被 expire
 LEAD_IN_MS = 1500
 
 NOTE_TRAVEL_MIN_MS = 800
@@ -45,23 +45,18 @@ INPUT_OFFSET_MIN_MS = -300
 INPUT_OFFSET_MAX_MS = 300
 INPUT_OFFSET_STEP_MS = 10
 
+# "Settings" 已移除：統一透過 "Tuning" 入 4-lane 畫面調整
 HOME_MENU = (
     "Mix & Match Quick Start",
     "Practice Pattern",
     "Performance",
-    "Tuning",      # 新增：直接從 Home 入 Tuning 畫面
-    "Settings",
+    "Tuning",
     "Quit",
 )
 RESULTS_MENU = (
     "Retry",
     "Detailed Performance",
     "Return Home",
-)
-SETTINGS_MENU = (
-    "Note Travel (ms)",
-    "Input Offset (ms)",
-    "Back",
 )
 
 JUDGMENT_COLORS = {
@@ -104,6 +99,8 @@ class GameEngine:
         self.small_font = pygame.font.SysFont("Arial", 26)
         self.judgment_font = pygame.font.SysFont("Arial", 72, bold=True)
         self.title_font = pygame.font.SysFont("Arial", 56, bold=True)
+        # 大號 * 用於 offset chart marker
+        self.marker_font = pygame.font.SysFont("Arial", 30, bold=True)
         self.chart = load_chart(config.chart_path)
         self.input_handler = InputHandler()
         self.air_detector = AirDetector()
@@ -112,19 +109,17 @@ class GameEngine:
         self._home_index = 0
         self._practice_index = 0
         self._results_index = 0
-        self._settings_index = 0
         self._performance_index = 0
         self._performance_section_index = 0
         self._practice_pattern: str | None = None
         self._current_mode = "quick"
-        # 上一個完成 session 嘅 summary，唔會喺 _start_session 清走
         self._last_session_summary: dict[str, object] | None = None
         self._judgment_counts: dict[str, int] = {}
         self._performance_history = load_history()
         if self._performance_history:
             self._performance_index = len(self._performance_history) - 1
         # Tuning 狀態
-        self._tuning_param: str | None = None
+        self._tuning_param: str = "input_offset_ms"
         self._tuning_note_start_ms = 0
         self._tuning_last_adjust_ms = 0
         self._tuning_tap_pending: int = 0
@@ -145,7 +140,6 @@ class GameEngine:
                 pass
         self._beat_interval_ms = int(60000 / self.config.bpm) if self.config.bpm > 0 else 0
         self._next_beat_ms = 0
-        # 之後由 _reset_session 真正填 data
         self.pending_notes: list[ChartNote] = []
         self.recorder = SessionRecorder()
         self.combo = 0
@@ -153,7 +147,7 @@ class GameEngine:
         self._total_notes = 0
         self._hit_notes = 0
         self._perfect_notes = 0
-        # 先畀個暫時值，避免 run() 第一 frame 爆 AttributeError
+        # 初始值避免 run() 第一 frame AttributeError；_reset_session 會覆蓋
         self.start_ticks = pygame.time.get_ticks()
 
     # ─── SOUND ───────────────────────────────────────────────────────────────
@@ -189,7 +183,6 @@ class GameEngine:
     # ─── SESSION ─────────────────────────────────────────────────────────────
 
     def _reset_session(self) -> None:
-        # 先 build 原始 notes，再統一加 LEAD_IN_MS，避免一入場就喺判定線
         raw_notes = self._build_pending_notes()
         self.pending_notes = [
             ChartNote(
@@ -211,14 +204,14 @@ class GameEngine:
         self._active_holds.clear()
         self._recent_presses.clear()
         self._active_zones.clear()
-        self._next_beat_ms = LEAD_IN_MS  # metronome 同步
+        self._next_beat_ms = LEAD_IN_MS
         self._total_notes = len(self.pending_notes)
         self._hit_notes = 0
         self._perfect_notes = 0
         self._judgment_counts = {}
-        # reset ticks 喺 build 完 notes 之後先做，避免 race
+        # ── 關鍵：start_ticks 喺所有 state reset 完之後先 set ──
         self.start_ticks = pygame.time.get_ticks()
-        print(f"Loaded {len(self.pending_notes)} notes (with {LEAD_IN_MS}ms lead-in).")
+        print(f"Loaded {len(self.pending_notes)} notes (lead-in={LEAD_IN_MS}ms).")
 
     def _build_pending_notes(self) -> list[ChartNote]:
         if self._practice_pattern:
@@ -269,7 +262,6 @@ class GameEngine:
         return sequence
 
     def _start_session(self, mode: str, practice_pattern: str | None) -> None:
-        # 唔再喺呢度叫 _end_session()，避免空 session 清走舊 summary
         self._current_mode = mode
         self._practice_pattern = practice_pattern
         self._reset_session()
@@ -285,12 +277,10 @@ class GameEngine:
         summary = self._build_session_summary(rows=rows_copy)
         total = int(summary.get("total", 0))
         if total == 0:
-            # 空 session（理論上唔應該出現）
             self._session_complete = True
             return
         self._session_complete = True
         self._finalize_session()
-        # 保存 summary，Retry / 之後重入都唔會清
         self._last_session_summary = summary
         try:
             self._performance_history = append_history(summary)
@@ -422,10 +412,16 @@ class GameEngine:
             print("GameEngine inner run loop started")
             snapshot = None
             while self.running:
-                now_ms = pygame.time.get_ticks() - self.start_ticks
-                snapshot = self.input_handler.poll(now_ms)
+                # ── BUG FIX：poll 用當前 ticks，event 處理完之後再算 now_ms ──
+                # 如果 _handle_events 入面 call 咗 _reset_session，
+                # start_ticks 已經更新，now_ms 會正確反映新 session 嘅時間，
+                # 唔會用舊 session 嘅大 now_ms 去 expire 新 notes
+                poll_ms = pygame.time.get_ticks() - self.start_ticks
+                snapshot = self.input_handler.poll(poll_ms)
                 self._active_zones = snapshot.active_zones
                 self._handle_events(snapshot.events, snapshot.quit_requested)
+                # 重新計算 now_ms，確保用最新嘅 start_ticks
+                now_ms = pygame.time.get_ticks() - self.start_ticks
                 self._update(now_ms)
                 self._draw(now_ms)
                 pygame.display.flip()
@@ -449,6 +445,7 @@ class GameEngine:
             if self._ui_state != "play":
                 if event.action == "restart" and self._ui_state == "results":
                     self._start_session(self._current_mode, self._practice_pattern)
+                    continue
                 self._handle_menu_input(event)
                 continue
             if event.action == "restart":
@@ -473,8 +470,6 @@ class GameEngine:
             self._handle_home_menu_action(action)
         elif self._ui_state == "practice_select":
             self._handle_practice_menu_action(action)
-        elif self._ui_state == "settings":
-            self._handle_settings_menu_action(action)
         elif self._ui_state == "results":
             self._handle_results_menu_action(action)
         elif self._ui_state == "performance_list":
@@ -502,11 +497,8 @@ class GameEngine:
         elif selection == "Performance":
             self._ui_state = "performance_list"
         elif selection == "Tuning":
-            # 直接入 4-lane tuning 畫面，預設調 Input Offset
+            # 直接入 4-lane tuning，預設調 input_offset
             self._start_tuning("input_offset_ms")
-        elif selection == "Settings":
-            self._settings_index = 0
-            self._ui_state = "settings"
         elif selection == "Quit":
             self.running = False
 
@@ -522,22 +514,6 @@ class GameEngine:
                 self._ui_state = "home"
             else:
                 self._start_session("practice", selection)
-        elif action == "menu_back":
-            self._ui_state = "home"
-
-    def _handle_settings_menu_action(self, action: str) -> None:
-        if action == "menu_up":
-            self._settings_index = (self._settings_index - 1) % len(SETTINGS_MENU)
-        elif action == "menu_down":
-            self._settings_index = (self._settings_index + 1) % len(SETTINGS_MENU)
-        elif action == "menu_select":
-            selection = SETTINGS_MENU[self._settings_index]
-            if selection == "Note Travel (ms)":
-                self._start_tuning("note_travel_ms")
-            elif selection == "Input Offset (ms)":
-                self._start_tuning("input_offset_ms")
-            elif selection == "Back":
-                self._ui_state = "home"
         elif action == "menu_back":
             self._ui_state = "home"
 
@@ -740,8 +716,6 @@ class GameEngine:
             self._draw_home()
         elif self._ui_state == "practice_select":
             self._draw_practice_select()
-        elif self._ui_state == "settings":
-            self._draw_settings()
         elif self._ui_state == "tuning":
             self._draw_tuning(now_ms)
         elif self._ui_state == "performance_list":
@@ -755,21 +729,12 @@ class GameEngine:
 
     def _draw_home(self) -> None:
         self._draw_menu("Rhythm Game Trainer", HOME_MENU, self._home_index)
-        self._draw_footer("GPIO: 1/2/3/4 = up/down/select/back")
+        self._draw_footer("GPIO: 1=up  2=down  3=select  4=back")
 
     def _draw_practice_select(self) -> None:
         items = self._practice_menu_items()
         self._draw_menu("Select Pattern", items, self._practice_index)
         self._draw_footer("Select a pattern to practice")
-
-    def _draw_settings(self) -> None:
-        lines = [
-            f"{SETTINGS_MENU[0]}: {self.note_travel_ms}",
-            f"{SETTINGS_MENU[1]}: {self.input_offset_ms}",
-            SETTINGS_MENU[2],
-        ]
-        self._draw_menu("Settings", lines, self._settings_index)
-        self._draw_footer("Select a setting to tune")
 
     def _draw_results(self) -> None:
         self.screen.fill((12, 12, 18))
@@ -832,7 +797,6 @@ class GameEngine:
         perfect_early = int(summary.get("perfect_early", 0))
         perfect_late = int(summary.get("perfect_late", 0))
 
-        # 左欄：overall stats
         header = [
             f"Total: {int(summary.get('total', 0))}",
             f"Hit Rate: {float(summary.get('hit_rate', 0.0)):.1f}%",
@@ -845,7 +809,6 @@ class GameEngine:
         ]
         self._draw_text_block_at(header, start_y=100, x=40, line_height=32)
 
-        # 右欄：selected section
         sections = self._current_sections()
         if sections:
             current = sections[self._performance_section_index % len(sections)]
@@ -863,7 +826,6 @@ class GameEngine:
             ]
             self._draw_text_block_at(section_lines, start_y=100, x=self.config.width // 2 + 20, line_height=32)
 
-        # Offset chart — 大 area，線+asterisk，左邊顯示 y 軸 ms 刻度
         offsets = summary.get("offsets", [])
         judgments_list = summary.get("judgments_per_note", [])
         if isinstance(offsets, list) and len(offsets) >= 1:
@@ -910,14 +872,32 @@ class GameEngine:
         self._set_last_judgment("", self._tuning_note_start_ms)
         self._ui_state = "tuning"
 
+    def _is_tuning_note_in_window(self, now_ms: int) -> bool:
+        """Lane 2 dual-purpose：note 係窗口內 = hit；否則 = 切換 active param"""
+        if self.note_travel_ms <= 0:
+            return False
+        adjusted = self._adjust_time(now_ms)
+        elapsed = adjusted - self._tuning_note_start_ms
+        cycle_index = max(0, elapsed // self.note_travel_ms)
+        expected = self._tuning_note_start_ms + (cycle_index + 1) * self.note_travel_ms
+        return abs(expected - adjusted) <= MAX_JUDGE_WINDOW_MS
+
+    def _toggle_tuning_param(self) -> None:
+        self._tuning_param = "note_travel_ms" if self._tuning_param == "input_offset_ms" else "input_offset_ms"
+
     def _handle_tuning_input(self, event: InputEvent) -> None:
         if event.zone is None or not event.pressed:
             return
+        now_ms = pygame.time.get_ticks() - self.start_ticks
         if event.zone == 4:
-            self._ui_state = "settings"
+            # ── 直接返回 Home，唔經 Settings ──
+            self._ui_state = "home"
         elif event.zone == 2:
-            now_ms = pygame.time.get_ticks() - self.start_ticks
-            self._handle_tuning_press(now_ms)
+            # note 喺 hit 窗口 → 判定；否則 → 切換 active param
+            if self._is_tuning_note_in_window(now_ms):
+                self._handle_tuning_press(now_ms)
+            else:
+                self._toggle_tuning_param()
         elif event.zone == 1:
             self._tuning_tap_pending = -1
         elif event.zone == 3:
@@ -934,13 +914,9 @@ class GameEngine:
         self._set_last_judgment(result.judgment, actual_time_ms)
 
     def _update_tuning(self, now_ms: int) -> None:
-        if self._tuning_param is None:
-            return
-        # tap 單步調整
         if self._tuning_tap_pending != 0:
             self._apply_tuning_step(self._tuning_tap_pending)
             self._tuning_tap_pending = 0
-        # hold 持續調整
         hold_interval_ms = 80
         if now_ms - self._tuning_last_adjust_ms < hold_interval_ms:
             return
@@ -970,11 +946,13 @@ class GameEngine:
 
     def _draw_tuning(self, now_ms: int) -> None:
         """
-        4-lane tuning 介面：
-        Lane 2 有循環 test note，
-        Lane 2 button = hit check，
-        Lane 1 tap/hold 向下調整，Lane 3 tap/hold 向上調整，Lane 4 back。
-        設定資訊顯示喺 judgment 線下面。
+        4-lane tuning 畫面：
+          Lane 2 有循環 test note
+          Lane 1 = decrease active param（tap 單步 / hold 持續）
+          Lane 2 = hit note（note 近判定線）/ 切換 active param（note 遠）
+          Lane 3 = increase active param
+          Lane 4 = 返回 Home
+          兩個參數同時顯示喺 judgment 線下方，active 一個高亮
         """
         self.screen.fill((12, 12, 18))
         W, H = self.config.width, self.config.height
@@ -1001,28 +979,133 @@ class GameEngine:
             pygame.draw.rect(self.screen, (135, 206, 250), note_rect, border_radius=8)
             pygame.draw.rect(self.screen, (255, 255, 255), note_rect, width=2, border_radius=8)
 
-        # 中間 judgement
+        # Judgment 顯示
         self._draw_judgment(now_ms)
 
-        # 設定資訊（judgment 線下面）
-        param_label = "Note Travel (ms)" if self._tuning_param == "note_travel_ms" else "Input Offset (ms)"
-        value = self.note_travel_ms if self._tuning_param == "note_travel_ms" else self.input_offset_ms
+        # ── 兩個參數同時顯示，active 高亮 ──
+        info_y = judgment_line_y + 18
+        param_info = [
+            ("Input Offset (ms)", self.input_offset_ms, "input_offset_ms"),
+            ("Note Travel (ms)", self.note_travel_ms, "note_travel_ms"),
+        ]
+        col_w = W // 2
+        for i, (label, value, param_key) in enumerate(param_info):
+            is_selected = (self._tuning_param == param_key)
+            cx = col_w * i + col_w // 2
+            header_col = (255, 226, 130) if is_selected else (160, 160, 180)
+            val_col = (255, 240, 100) if is_selected else (200, 200, 200)
+            # 高亮背景
+            if is_selected:
+                bg_rect = pygame.Rect(col_w * i + 8, info_y - 6, col_w - 16, 90)
+                pygame.draw.rect(self.screen, (40, 44, 64), bg_rect, border_radius=8)
+                pygame.draw.rect(self.screen, (80, 80, 120), bg_rect, width=2, border_radius=8)
+            lbl_surf = self.small_font.render(label, True, header_col)
+            self.screen.blit(lbl_surf, lbl_surf.get_rect(center=(cx, info_y + 14)))
+            val_surf = self.judgment_font.render(str(value), True, val_col)
+            self.screen.blit(val_surf, val_surf.get_rect(center=(cx, info_y + 56)))
 
-        info_y = judgment_line_y + 20
-        lbl = self.font.render(f"Tuning: {param_label}", True, (220, 220, 255))
-        self.screen.blit(lbl, lbl.get_rect(center=(W // 2, info_y)))
-        val = self.judgment_font.render(str(value), True, (255, 226, 130))
-        self.screen.blit(val, val.get_rect(center=(W // 2, info_y + 46)))
-
-        # Lane label
-        labels = ["[ ▼ Down ]", "[ Hit ]", "[ ▲ Up ]", "[ Back ]"]
+        # Lane 底部提示
+        labels = ["[ ▼ Down ]", "[ Hit/Switch ]", "[ ▲ Up ]", "[ Home ]"]
         colors = [(255, 170, 120), (150, 220, 255), (150, 240, 170), (180, 180, 180)]
         for i, (txt, col) in enumerate(zip(labels, colors)):
             cx = i * lane_width + lane_inner_width // 2
             surf = self.small_font.render(txt, True, col)
-            self.screen.blit(surf, surf.get_rect(center=(cx, info_y + 105)))
+            self.screen.blit(surf, surf.get_rect(center=(cx, info_y + 106)))
 
-        self._draw_footer("Tap 1=down  Tap 3=up  |  Hold 1/3 持續調整  |  4=back")
+        self._draw_footer("1/3: adjust  |  2: hit / switch param  |  4: back to home")
+
+    # ─── OFFSET CHART ────────────────────────────────────────────────────────
+
+    def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
+        """
+        Offset chart 改良版：
+        - 自動 Y 軸範圍 + 更多刻度（gap 越大，刻度越密）
+        - 粗線（3px）+ 大 * marker（marker_font）
+        - 左邊留白顯示 ms 刻度，右對齊
+        - Y 軸標籤「offset to perfect (ms)」
+        """
+        if not offsets:
+            return
+
+        pygame.draw.rect(self.screen, (22, 22, 36), rect)
+        pygame.draw.rect(self.screen, (60, 60, 80), rect, width=2)
+
+        # ── 動態 Y 範圍 ──
+        actual_max = max(abs(o) for o in offsets)
+        if actual_max == 0:
+            actual_max = 10
+
+        if actual_max <= 30:
+            max_abs, tick_interval = 30, 10
+        elif actual_max <= 50:
+            max_abs, tick_interval = 50, 10
+        elif actual_max <= 100:
+            max_abs, tick_interval = 100, 25
+        elif actual_max <= 150:
+            max_abs, tick_interval = 150, 50
+        elif actual_max <= 200:
+            max_abs, tick_interval = 200, 50
+        elif actual_max <= 300:
+            max_abs, tick_interval = 300, 50
+        elif actual_max <= 400:
+            max_abs, tick_interval = 400, 100
+        else:
+            max_abs = min(500, ((actual_max + 99) // 100) * 100)
+            tick_interval = 100
+
+        # 左邊留白給 Y 軸 label（最長係 "-200" = 約 50px）
+        left_margin = 58
+        plot_left = rect.left + left_margin
+        plot_right = rect.right - 4
+        plot_width = plot_right - plot_left
+
+        mid_y = rect.top + rect.height // 2
+        usable_half = rect.height // 2 - 18
+        scale_y = usable_half / max_abs if max_abs > 0 else 1.0
+
+        # ── Y 軸標題 ──
+        title_surf = self.small_font.render("offset to perfect (ms)", True, (140, 140, 160))
+        self.screen.blit(title_surf, (plot_left + 4, rect.top + 4))
+
+        # ── Tick 線 + 數字 ──
+        tick_vals = list(range(-max_abs, max_abs + 1, tick_interval))
+        for tv in tick_vals:
+            ty = int(mid_y - tv * scale_y)
+            if ty < rect.top or ty > rect.bottom:
+                continue
+            line_col = (130, 130, 80) if tv == 0 else (65, 65, 88)
+            line_w = 2 if tv == 0 else 1
+            pygame.draw.line(self.screen, line_col, (plot_left, ty), (plot_right, ty), line_w)
+            # 右對齊數字
+            txt_surf = self.small_font.render(f"{tv:+d}" if tv != 0 else "0", True, (160, 160, 185))
+            txt_rect = txt_surf.get_rect(midright=(plot_left - 4, ty))
+            self.screen.blit(txt_surf, txt_rect)
+
+        # ── 計算各 note 的像素位置 ──
+        n = len(offsets)
+        if n == 1:
+            xs = [plot_left + plot_width // 2]
+        else:
+            xs = [plot_left + int(i * plot_width / (n - 1)) for i in range(n)]
+
+        points: list[tuple[int, int]] = []
+        for i, offset in enumerate(offsets):
+            px = xs[i]
+            clamped = max(-max_abs, min(max_abs, offset))
+            py = int(mid_y - clamped * scale_y)
+            points.append((px, py))
+
+        # ── 粗連接線（3px）──
+        if len(points) >= 2:
+            pygame.draw.lines(self.screen, (85, 85, 115), False, points, 3)
+
+        # ── 大 * marker，以 judgment 顏色區分 ──
+        for i, (px, py) in enumerate(points):
+            judgment = judgments_list[i] if i < len(judgments_list) else "Miss"
+            color = JUDGMENT_COLORS.get(judgment, (220, 220, 220))
+            star = self.marker_font.render("*", True, color)
+            star_rect = star.get_rect(center=(px, py))
+            self.screen.blit(star, star_rect)
 
     # ─── CHART HELPERS ───────────────────────────────────────────────────────
 
@@ -1080,72 +1163,6 @@ class GameEngine:
     def _draw_footer(self, text: str) -> None:
         hint = self.small_font.render(text, True, (160, 160, 160))
         self.screen.blit(hint, (40, self.config.height - 40))
-
-    def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
-        """
-        Offset chart：
-        - 自動根據實際最大 offset 決定 Y 軸範圍（向上 round 到最近 50ms）
-        - 中間 0 線
-        - 以 judgment 顏色畫粗線 + `*` marker
-        - 左邊 Y 軸標示「offset to perfect (ms)」，配 ±max、±max/2 四個刻度
-        """
-        if len(offsets) < 1:
-            return
-
-        pygame.draw.rect(self.screen, (22, 22, 36), rect)
-        pygame.draw.rect(self.screen, (60, 60, 80), rect, width=2)
-
-        # 動態 Y 範圍
-        max_val = max(abs(min(offsets)), abs(max(offsets)))
-        if max_val <= 0:
-            max_val = 50
-        step = 50
-        max_abs = min(500, ((max_val + step - 1) // step) * step)  # 上限 500ms
-        mid_y = rect.centery
-        scale_y = (rect.height / 2 - 20) / max_abs
-
-        # 中線 (0)
-        pygame.draw.line(self.screen, (120, 120, 80), (rect.left, mid_y), (rect.right, mid_y), 1)
-
-        # ±max、±max/2 tick 線
-        tick_vals = [max_abs, max_abs // 2, -max_abs // 2, -max_abs]
-        for tv in tick_vals:
-            ty = int(mid_y - tv * scale_y)
-            pygame.draw.line(self.screen, (70, 70, 90), (rect.left, ty), (rect.right, ty), 1)
-
-        # Y 軸刻度文字
-        label = self.small_font.render("offset to perfect (ms)", True, (140, 140, 160))
-        self.screen.blit(label, (rect.left + 4, rect.top + 4))
-        for tv in tick_vals:
-            ty = int(mid_y - tv * scale_y)
-            txt = self.small_font.render(f"{tv:+d}", True, (160, 160, 180))
-            self.screen.blit(txt, (rect.left + 6, ty - 10))
-
-        n = len(offsets)
-        if n == 1:
-            xs = [rect.centerx]
-        else:
-            step_x = rect.width / (n - 1)
-            xs = [rect.left + int(i * step_x) for i in range(n)]
-
-        points: list[tuple[int, int]] = []
-        for i, offset in enumerate(offsets):
-            px = xs[i]
-            clamped = max(-max_abs, min(max_abs, offset))
-            py = int(mid_y - clamped * scale_y)
-            points.append((px, py))
-
-        # 背景線
-        if len(points) >= 2:
-            pygame.draw.lines(self.screen, (90, 90, 120), False, points, 2)
-
-        # 每個 note 用 `*` marker + judgment 顏色
-        for i, (px, py) in enumerate(points):
-            judgment = judgments_list[i] if i < len(judgments_list) else "Miss"
-            color = JUDGMENT_COLORS.get(judgment, (220, 220, 220))
-            star = self.small_font.render("*", True, color)
-            star_rect = star.get_rect(center=(px, py))
-            self.screen.blit(star, star_rect)
 
     def _draw_judgment(self, now_ms: int) -> None:
         if not self.last_judgment:
