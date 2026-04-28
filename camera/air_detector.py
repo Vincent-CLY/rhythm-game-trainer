@@ -1,6 +1,8 @@
+# camera/air_detector.py
 from __future__ import annotations
 
 import time
+from pathlib import Path
 
 
 class AirDetector:
@@ -46,6 +48,23 @@ class AirDetector:
         except Exception:
             return False
         return False
+
+    def capture_still(self, path: Path) -> bool:
+        """
+        當 Miss 發生時呼叫：直接 grab 一幀 frame 儲存為 JPEG。
+        cv2 唔可用或 camera 唔開著就返回 False（唔會 crash）。
+        """
+        if not self.enabled or self._capture is None or self._cv2 is None:
+            return False
+        try:
+            ok, frame = self._capture.read()
+            if not ok or frame is None:
+                return False
+            path.parent.mkdir(parents=True, exist_ok=True)
+            self._cv2.imwrite(str(path), frame)
+            return True
+        except Exception:
+            return False
 
     def close(self) -> None:
         if self._capture is not None:
