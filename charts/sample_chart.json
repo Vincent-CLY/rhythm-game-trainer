@@ -17,61 +17,6 @@
       ]
     },
     {
-      "name": "HoldLine",
-      "notes": [
-        { "time_ms": 0, "lane": 1, "note_type": "HOLD", "duration_ms": 600 },
-        { "time_ms": 900, "lane": 3, "note_type": "HOLD", "duration_ms": 600 },
-        { "time_ms": 1800, "lane": 2, "note_type": "TAP" }
-      ]
-    },
-    {
-      "name": "SlideStep",
-      "notes": [
-        { "time_ms": 0, "lane": 1, "note_type": "TAP" },
-        { "time_ms": 200, "lane": 2, "note_type": "SLIDE" },
-        { "time_ms": 600, "lane": 2, "note_type": "TAP" },
-        { "time_ms": 800, "lane": 3, "note_type": "SLIDE" },
-        { "time_ms": 1200, "lane": 3, "note_type": "TAP" },
-        { "time_ms": 1400, "lane": 4, "note_type": "SLIDE" }
-      ]
-    },
-    {
-      "name": "AirTap",
-      "notes": [
-        { "time_ms": 0, "lane": 2, "note_type": "AIR" },
-        { "time_ms": 500, "lane": 3, "note_type": "TAP" },
-        { "time_ms": 1000, "lane": 2, "note_type": "AIR" },
-        { "time_ms": 1500, "lane": 4, "note_type": "TAP" }
-      ]
-    },
-    {
-      "name": "ZigZag",
-      "notes": [
-        { "time_ms": 0, "lane": 1, "note_type": "TAP" },
-        { "time_ms": 400, "lane": 4, "note_type": "TAP" },
-        { "time_ms": 800, "lane": 1, "note_type": "TAP" },
-        { "time_ms": 1200, "lane": 4, "note_type": "TAP" },
-        { "time_ms": 1600, "lane": 2, "note_type": "TAP" }
-      ]
-    },
-    {
-      "name": "HoldSlide",
-      "notes": [
-        { "time_ms": 0, "lane": 1, "note_type": "HOLD", "duration_ms": 700 },
-        { "time_ms": 900, "lane": 2, "note_type": "TAP" },
-        { "time_ms": 1100, "lane": 3, "note_type": "SLIDE" },
-        { "time_ms": 1600, "lane": 4, "note_type": "TAP" }
-      ]
-    },
-    {
-      "name": "AirHold",
-      "notes": [
-        { "time_ms": 0, "lane": 3, "note_type": "AIR" },
-        { "time_ms": 400, "lane": 1, "note_type": "HOLD", "duration_ms": 500 },
-        { "time_ms": 1200, "lane": 4, "note_type": "AIR" }
-      ]
-    },
-    {
       "name": "SpeedTap",
       "notes": [
         { "time_ms": 0, "lane": 1, "note_type": "TAP" },
