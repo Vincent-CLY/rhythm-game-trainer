@@ -14,9 +14,8 @@ class AirDetector:
         self._last_trigger = 0.0
         self._cooldown_s = 0.3
         self._motion_threshold = 12.0
-        try:  # pragma: no cover - optional dependency
+        try:
             import cv2
-
             capture = cv2.VideoCapture(0)
             if capture.isOpened():
                 self._capture = capture
@@ -26,9 +25,7 @@ class AirDetector:
             self.enabled = False
 
     def update(self) -> bool:
-        if not self.enabled:
-            return False
-        if self._capture is None:
+        if not self.enabled or self._capture is None:
             return False
         try:
             ok, frame = self._capture.read()
@@ -51,8 +48,8 @@ class AirDetector:
 
     def capture_still(self, path: Path) -> bool:
         """
-        當 Miss 發生時呼叫：直接 grab 一幀 frame 儲存為 JPEG。
-        cv2 唔可用或 camera 唔開著就返回 False（唔會 crash）。
+        Miss 發生時呼叫：grab 一幀並儲存為 JPEG。
+        camera 唔可用時靜靜返回 False，唔會 crash。
         """
         if not self.enabled or self._capture is None or self._cv2 is None:
             return False

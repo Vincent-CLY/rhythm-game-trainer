@@ -45,7 +45,7 @@ INPUT_OFFSET_MIN_MS = -300
 INPUT_OFFSET_MAX_MS = 300
 INPUT_OFFSET_STEP_MS = 10
 
-# "Settings" 已移除：統一透過 "Tuning" 入 4-lane 畫面調整
+# HOME_MENU 第 4 項係 "Settings"（4-lane 調校畫面）
 HOME_MENU = (
     "Mix & Match Quick Start",
     "Practice Pattern",
@@ -118,7 +118,7 @@ class GameEngine:
         self._performance_history = load_history()
         if self._performance_history:
             self._performance_index = len(self._performance_history) - 1
-        # Tuning 狀態
+        # Settings 狀態（舊稱 Tuning）
         self._tuning_param: str = "input_offset_ms"
         self._tuning_note_start_ms = 0
         self._tuning_last_adjust_ms = 0
@@ -147,6 +147,8 @@ class GameEngine:
         self._total_notes = 0
         self._hit_notes = 0
         self._perfect_notes = 0
+        # [CHANGE] Miss 相片路徑列表，每個 session 開始時清空
+        self._miss_photos: list[str] = []
         # 初始值避免 run() 第一 frame AttributeError；_reset_session 會覆蓋
         self.start_ticks = pygame.time.get_ticks()
 
@@ -209,6 +211,8 @@ class GameEngine:
         self._hit_notes = 0
         self._perfect_notes = 0
         self._judgment_counts = {}
+        # [CHANGE] 每個新 session 清空 Miss 相片列表
+        self._miss_photos = []
         # ── 關鍵：start_ticks 喺所有 state reset 完之後先 set ──
         self.start_ticks = pygame.time.get_ticks()
         print(f"Loaded {len(self.pending_notes)} notes (lead-in={LEAD_IN_MS}ms).")
@@ -243,23 +247,22 @@ class GameEngine:
         lead_in_ms = training.lead_in_ms if training is not None else 1000
         min_time = min(note.time_ms for note in pattern.notes)
         max_time = max(note.time_ms for note in pattern.notes)
-        duration = max(0, max_time - min_time)
-        sequence: list[ChartNote] = []
-        cursor_ms = lead_in_ms
-        for _ in range(repeats):
-            for note in pattern.notes:
-                sequence.append(
+        pattern_duration_ms = max_time - min_time if max_time > min_time else 1000
+        notes: list[ChartNote] = []
+        for rep in range(repeats):
+            time_offset = lead_in_ms + rep * (pattern_duration_ms + gap_ms)
+            for note in sorted(pattern.notes, key=lambda n: n.time_ms):
+                notes.append(
                     ChartNote(
-                        time_ms=note.time_ms - min_time + cursor_ms,
+                        time_ms=note.time_ms - min_time + time_offset,
                         lane=note.lane,
-                        note_type="TAP",
+                        note_type=note.note_type,
                         duration_ms=note.duration_ms,
-                        pattern_name=pattern.name,
-                        pattern_instance=1,
+                        pattern_name=note.pattern_name,
+                        pattern_instance=rep + 1,
                     )
                 )
-            cursor_ms += duration + gap_ms
-        return sequence
+        return notes
 
     def _start_session(self, mode: str, practice_pattern: str | None) -> None:
         self._current_mode = mode
@@ -403,6 +406,8 @@ class GameEngine:
             "offsets": offsets,
             "judgments_per_note": judgments_per_note,
             "sections": sections,
+            # [CHANGE] 每個 Miss 對應嘅相片路徑（camera 唔可用時係空 list）
+            "miss_photos": list(getattr(self, "_miss_photos", [])),
         }
 
     # ─── MAIN LOOP ───────────────────────────────────────────────────────────
@@ -496,8 +501,9 @@ class GameEngine:
             self._ui_state = "practice_select"
         elif selection == "Performance":
             self._ui_state = "performance_list"
-        elif selection == "Tuning":
-            # 直接入 4-lane tuning，預設調 input_offset
+        # [CHANGE] 之前係 "Tuning"，已改名為 "Settings"，呢度要跟住改
+        elif selection == "Settings":
+            # 直接入 4-lane settings 畫面，預設調 input_offset
             self._start_tuning("input_offset_ms")
         elif selection == "Quit":
             self.running = False
@@ -653,6 +659,15 @@ class GameEngine:
         self._judgment_counts[judgment] = self._judgment_counts.get(judgment, 0) + 1
         if judgment == "Miss":
             self.combo = 0
+            # [CHANGE] Miss 發生時，用 camera module 拍一張相並儲存
+            miss_index = self._judgment_counts.get("Miss", 1)
+            photo_path = (
+                Path("data/miss_photos")
+                / self.recorder.session_id
+                / f"miss_{miss_index}.jpg"
+            )
+            if self.air_detector.capture_still(photo_path):
+                self._miss_photos.append(str(photo_path))
         else:
             self.combo += 1
         self.recorder.record(
@@ -678,7 +693,6 @@ class GameEngine:
         for zone, hold in list(self._active_holds.items()):
             if now_ms - hold.start_time_ms >= hold.required_duration_ms and zone in self._active_zones:
                 self._record_note_result(hold.note, actual_time_ms=hold.start_time_ms, offset_ms=hold.timing_result.offset_ms, judgment=hold.timing_result.judgment, zone=zone, display_time_ms=now_ms)
-                self._active_holds.pop(zone, None)
 
     def _tick_metronome(self, now_ms: int) -> None:
         if self._metronome_sound is None or self._beat_interval_ms <= 0:
@@ -826,12 +840,52 @@ class GameEngine:
             ]
             self._draw_text_block_at(section_lines, start_y=100, x=self.config.width // 2 + 20, line_height=32)
 
+        # [CHANGE] Miss 相片縮略圖區域（camera 唔可用時 miss_photos 係空 list，唔會顯示）
+        miss_photos = summary.get("miss_photos", [])
+        photo_strip_h = 0
+        if isinstance(miss_photos, list) and miss_photos:
+            photo_strip_h = 130
+            strip_y = self.config.height - 60 - photo_strip_h
+            # "Miss Photos" 標題
+            label_surf = self.small_font.render("Miss Photos:", True, (255, 110, 110))
+            self.screen.blit(label_surf, (40, strip_y))
+            thumb_h = photo_strip_h - 30
+            thumb_w = int(thumb_h * 4 / 3)
+            x_cursor = 40
+            for photo_path_str in miss_photos:
+                if x_cursor + thumb_w > self.config.width - 40:
+                    break
+                photo_path = Path(photo_path_str)
+                if photo_path.exists():
+                    try:
+                        img = pygame.image.load(str(photo_path))
+                        img = pygame.transform.scale(img, (thumb_w, thumb_h))
+                        self.screen.blit(img, (x_cursor, strip_y + 28))
+                    except Exception:
+                        # 相片載入失敗：顯示紅色佔位方塊
+                        pygame.draw.rect(
+                            self.screen,
+                            (60, 30, 30),
+                            (x_cursor, strip_y + 28, thumb_w, thumb_h),
+                        )
+                        err_surf = self.small_font.render("?", True, (255, 110, 110))
+                        self.screen.blit(
+                            err_surf,
+                            err_surf.get_rect(
+                                center=(x_cursor + thumb_w // 2, strip_y + 28 + thumb_h // 2)
+                            ),
+                        )
+                x_cursor += thumb_w + 8
+
         offsets = summary.get("offsets", [])
         judgments_list = summary.get("judgments_per_note", [])
         if isinstance(offsets, list) and len(offsets) >= 1:
             chart_top = 370
-            chart_rect = pygame.Rect(40, chart_top, self.config.width - 80, self.config.height - chart_top - 60)
-            self._draw_offset_chart(offsets, judgments_list, chart_rect)
+            # [CHANGE] 如果有相片，offset chart 底部要留空俾相片條
+            chart_bottom = self.config.height - 60 - photo_strip_h
+            chart_rect = pygame.Rect(40, chart_top, self.config.width - 80, chart_bottom - chart_top)
+            if chart_rect.height > 20:
+                self._draw_offset_chart(offsets, judgments_list, chart_rect)
 
         self._draw_footer("1/2: sections | 3: practice pattern | 4: back")
 
@@ -862,7 +916,7 @@ class GameEngine:
         self.screen.blit(acc_surf, (16, 54))
         self._draw_judgment(now_ms)
 
-    # ─── TUNING ──────────────────────────────────────────────────────────────
+    # ─── SETTINGS (previously Tuning) ────────────────────────────────────────
 
     def _start_tuning(self, param: str) -> None:
         self._tuning_param = param
@@ -928,7 +982,7 @@ class GameEngine:
 
     def _draw_tuning(self, now_ms: int) -> None:
         """
-        4-lane tuning 畫面：
+        4-lane settings 畫面：
           Lane 2 有循環 test note
           Lane 1 = decrease active param（tap 單步 / hold 持續）
           Lane 2 = hit note（note 近判定線）/ 切換 active param（note 遠）
@@ -940,7 +994,7 @@ class GameEngine:
         W, H = self.config.width, self.config.height
         lane_width = W // 4
         lane_inner_width = lane_width - 2
-        # Tuning 專用：比 play mode 高，預留足夠空間給底部 info panel
+        # Settings 專用：比 play mode 高，預留足夠空間給底部 info panel
         judgment_line_y = H - 260
 
         for index in range(4):
@@ -998,6 +1052,7 @@ class GameEngine:
             self.screen.blit(surf, surf.get_rect(center=(cx, label_y)))
 
         self._draw_footer("1/3: adjust  |  2: hit / switch param  |  4: back to home")
+
     # ─── OFFSET CHART ────────────────────────────────────────────────────────
 
     def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
@@ -1044,8 +1099,7 @@ class GameEngine:
         plot_width = plot_right - plot_left
 
         mid_y = rect.top + rect.height // 2
-        usable_half = rect.height // 2 - 18
-        scale_y = usable_half / max_abs if max_abs > 0 else 1.0
+        scale_y = (rect.height // 2 - 8) / max_abs if max_abs > 0 else 1.0
 
         # ── Y 軸標題 ──
         title_surf = self.small_font.render("offset to perfect (ms)", True, (140, 140, 160))
