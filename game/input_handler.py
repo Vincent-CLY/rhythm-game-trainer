@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pygame
 
@@ -16,17 +16,20 @@ class InputEvent:
     pressed: bool = False
     is_air: bool = False
     timestamp_ms: int = 0
+    action: str | None = None
 
 
 @dataclass(slots=True)
 class InputSnapshot:
     events: list[InputEvent]
     quit_requested: bool = False
+    active_zones: set[int] = field(default_factory=set)
 
 
 class InputHandler:
     def __init__(self) -> None:
         self._previous_gpio_state: dict[int, int] = {zone: GPIO.LOW for zone in ZONE_PINS}
+        self._active_zones: set[int] = set()
         try:
             GPIO.setmode(GPIO.BCM)
             GPIO.setwarnings(False)
@@ -44,15 +47,21 @@ class InputHandler:
             elif event.type == pygame.KEYDOWN:
                 zone = self._key_to_zone(event.key)
                 if zone is not None:
+                    self._active_zones.add(zone)
                     events.append(InputEvent(zone=zone, pressed=True, timestamp_ms=timestamp_ms))
                 elif event.key == pygame.K_SPACE:
                     events.append(InputEvent(is_air=True, pressed=True, timestamp_ms=timestamp_ms))
+                elif event.key in (pygame.K_ESCAPE, pygame.K_q):
+                    quit_requested = True
+                elif event.key == pygame.K_r:
+                    events.append(InputEvent(action="restart", timestamp_ms=timestamp_ms))
             elif event.type == pygame.KEYUP:
                 zone = self._key_to_zone(event.key)
                 if zone is not None:
+                    self._active_zones.discard(zone)
                     events.append(InputEvent(zone=zone, pressed=False, timestamp_ms=timestamp_ms))
         events.extend(self._poll_gpio(timestamp_ms))
-        return InputSnapshot(events=events, quit_requested=quit_requested)
+        return InputSnapshot(events=events, quit_requested=quit_requested, active_zones=set(self._active_zones))
 
     def _poll_gpio(self, timestamp_ms: int) -> list[InputEvent]:
         events: list[InputEvent] = []
@@ -62,10 +71,20 @@ class InputHandler:
             except Exception:
                 continue
             previous_state = self._previous_gpio_state[zone]
+            if current_state == GPIO.HIGH:
+                self._active_zones.add(zone)
+            else:
+                self._active_zones.discard(zone)
             if current_state != previous_state:
                 self._previous_gpio_state[zone] = current_state
                 events.append(InputEvent(zone=zone, pressed=current_state == GPIO.HIGH, timestamp_ms=timestamp_ms))
         return events
+
+    def close(self) -> None:
+        try:
+            GPIO.cleanup()
+        except Exception:
+            pass
 
     @staticmethod
     def _key_to_zone(key: int) -> int | None:
