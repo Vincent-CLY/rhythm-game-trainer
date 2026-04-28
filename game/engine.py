@@ -50,7 +50,7 @@ HOME_MENU = (
     "Mix & Match Quick Start",
     "Practice Pattern",
     "Performance",
-    "Tuning",
+    "Settings",
     "Quit",
 )
 RESULTS_MENU = (
@@ -872,32 +872,14 @@ class GameEngine:
         self._set_last_judgment("", self._tuning_note_start_ms)
         self._ui_state = "tuning"
 
-    def _is_tuning_note_in_window(self, now_ms: int) -> bool:
-        """Lane 2 dual-purpose：note 係窗口內 = hit；否則 = 切換 active param"""
-        if self.note_travel_ms <= 0:
-            return False
-        adjusted = self._adjust_time(now_ms)
-        elapsed = adjusted - self._tuning_note_start_ms
-        cycle_index = max(0, elapsed // self.note_travel_ms)
-        expected = self._tuning_note_start_ms + (cycle_index + 1) * self.note_travel_ms
-        return abs(expected - adjusted) <= MAX_JUDGE_WINDOW_MS
-
-    def _toggle_tuning_param(self) -> None:
-        self._tuning_param = "note_travel_ms" if self._tuning_param == "input_offset_ms" else "input_offset_ms"
-
     def _handle_tuning_input(self, event: InputEvent) -> None:
         if event.zone is None or not event.pressed:
             return
-        now_ms = pygame.time.get_ticks() - self.start_ticks
         if event.zone == 4:
-            # ── 直接返回 Home，唔經 Settings ──
             self._ui_state = "home"
         elif event.zone == 2:
-            # note 喺 hit 窗口 → 判定；否則 → 切換 active param
-            if self._is_tuning_note_in_window(now_ms):
-                self._handle_tuning_press(now_ms)
-            else:
-                self._toggle_tuning_param()
+            now_ms = pygame.time.get_ticks() - self.start_ticks
+            self._handle_tuning_press(now_ms)
         elif event.zone == 1:
             self._tuning_tap_pending = -1
         elif event.zone == 3:
@@ -958,7 +940,8 @@ class GameEngine:
         W, H = self.config.width, self.config.height
         lane_width = W // 4
         lane_inner_width = lane_width - 2
-        judgment_line_y = H - JUDGMENT_LINE_OFFSET
+        # Tuning 專用：比 play mode 高，預留足夠空間給底部 info panel
+        judgment_line_y = H - 260
 
         for index in range(4):
             x = index * lane_width
@@ -983,7 +966,8 @@ class GameEngine:
         self._draw_judgment(now_ms)
 
         # ── 兩個參數同時顯示，active 高亮 ──
-        info_y = judgment_line_y + 18
+        # info_y 貼住 judgment line 下方 10px
+        info_y = judgment_line_y + 10
         param_info = [
             ("Input Offset (ms)", self.input_offset_ms, "input_offset_ms"),
             ("Note Travel (ms)", self.note_travel_ms, "note_travel_ms"),
@@ -994,26 +978,26 @@ class GameEngine:
             cx = col_w * i + col_w // 2
             header_col = (255, 226, 130) if is_selected else (160, 160, 180)
             val_col = (255, 240, 100) if is_selected else (200, 200, 200)
-            # 高亮背景
+            # 高亮背景：高度 96px 足夠包住 label(28px) + gap + value(60px)
             if is_selected:
-                bg_rect = pygame.Rect(col_w * i + 8, info_y - 6, col_w - 16, 90)
+                bg_rect = pygame.Rect(col_w * i + 8, info_y, col_w - 16, 96)
                 pygame.draw.rect(self.screen, (40, 44, 64), bg_rect, border_radius=8)
                 pygame.draw.rect(self.screen, (80, 80, 120), bg_rect, width=2, border_radius=8)
             lbl_surf = self.small_font.render(label, True, header_col)
-            self.screen.blit(lbl_surf, lbl_surf.get_rect(center=(cx, info_y + 14)))
+            self.screen.blit(lbl_surf, lbl_surf.get_rect(center=(cx, info_y + 16)))
             val_surf = self.judgment_font.render(str(value), True, val_col)
-            self.screen.blit(val_surf, val_surf.get_rect(center=(cx, info_y + 56)))
+            self.screen.blit(val_surf, val_surf.get_rect(center=(cx, info_y + 60)))
 
-        # Lane 底部提示
+        # Lane 底部提示：固定在 footer 上方 50px 附近
+        label_y = H - 84
         labels = ["[ ▼ Down ]", "[ Hit/Switch ]", "[ ▲ Up ]", "[ Home ]"]
         colors = [(255, 170, 120), (150, 220, 255), (150, 240, 170), (180, 180, 180)]
         for i, (txt, col) in enumerate(zip(labels, colors)):
             cx = i * lane_width + lane_inner_width // 2
             surf = self.small_font.render(txt, True, col)
-            self.screen.blit(surf, surf.get_rect(center=(cx, info_y + 106)))
+            self.screen.blit(surf, surf.get_rect(center=(cx, label_y)))
 
         self._draw_footer("1/3: adjust  |  2: hit / switch param  |  4: back to home")
-
     # ─── OFFSET CHART ────────────────────────────────────────────────────────
 
     def _draw_offset_chart(self, offsets: list[int], judgments_list: list[str], rect: pygame.Rect) -> None:
