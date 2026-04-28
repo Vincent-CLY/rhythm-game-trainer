@@ -1,0 +1,21 @@
+{
+  "bpm": 120,
+  "patterns": [
+    {
+      "name": "Warmup",
+      "notes": [
+        {"time_ms": 1000, "lane": 1, "note_type": "TAP"},
+        {"time_ms": 1500, "lane": 2, "note_type": "TAP"},
+        {"time_ms": 2000, "lane": 3, "note_type": "HOLD", "duration_ms": 500},
+        {"time_ms": 2600, "lane": 4, "note_type": "SLIDE"}
+      ]
+    },
+    {
+      "name": "AIRDrill",
+      "notes": [
+        {"time_ms": 3200, "lane": 1, "note_type": "AIR"},
+        {"time_ms": 3600, "lane": 2, "note_type": "TAP"}
+      ]
+    }
+  ]
+}
