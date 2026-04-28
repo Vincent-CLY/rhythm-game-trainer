@@ -13,6 +13,7 @@ class ChartNote:
     note_type: str
     duration_ms: int = 0
     pattern_name: str = ""
+    pattern_instance: int = 1
 
 
 @dataclass(slots=True)
@@ -103,12 +104,16 @@ def build_note_sequence(chart: ChartFile) -> list[ChartNote]:
     sequence: list[ChartNote] = []
     cursor_ms = training.lead_in_ms
 
+    pattern_instances: dict[str, int] = {}
+
     def add_pattern(pattern: ChartPattern) -> int:
         if not pattern.notes:
             return 0
         min_time = min(note.time_ms for note in pattern.notes)
         max_time = max(note.time_ms for note in pattern.notes)
         duration = max(0, max_time - min_time)
+        pattern_instances[pattern.name] = pattern_instances.get(pattern.name, 0) + 1
+        instance_id = pattern_instances[pattern.name]
         for note in pattern.notes:
             sequence.append(
                 ChartNote(
@@ -117,6 +122,7 @@ def build_note_sequence(chart: ChartFile) -> list[ChartNote]:
                     note_type=note.note_type,
                     duration_ms=note.duration_ms,
                     pattern_name=pattern.name,
+                    pattern_instance=instance_id,
                 )
             )
         return duration

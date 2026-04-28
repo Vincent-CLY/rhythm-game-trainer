@@ -11,6 +11,7 @@ CSV_COLUMNS = [
     "session_id",
     "timestamp",
     "pattern_name",
+    "pattern_instance",
     "note_type",
     "zone",
     "expected_time",

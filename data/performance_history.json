@@ -1,0 +1,3761 @@
+[
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:13:02.771737+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "a1f20b3a30a6410bb3b1eca42084ce39",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 68.75,
+    "counts": {
+      "Bad": 0,
+      "Good": 1,
+      "Great": 2,
+      "Miss": 5,
+      "Perfect": 8
+    },
+    "ended_at": "2026-04-28T14:13:14.559422+00:00",
+    "hit_rate": 68.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 6.25,
+      "Great": 12.5,
+      "Miss": 31.25,
+      "Perfect": 50.0
+    },
+    "perfect_early": 3,
+    "perfect_late": 5,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 68.75,
+        "counts": {
+          "Bad": 0,
+          "Good": 1,
+          "Great": 2,
+          "Miss": 5,
+          "Perfect": 8
+        },
+        "hit_rate": 68.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 6.25,
+          "Great": 12.5,
+          "Miss": 31.25,
+          "Perfect": 50.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "db59fcc0ec184fa2a3e2fcf4f1798eb0",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:13:23.333518+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "a9b71494b45f45128bdefd7ad7ae731e",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 68.75,
+    "counts": {
+      "Bad": 2,
+      "Good": 0,
+      "Great": 1,
+      "Miss": 3,
+      "Perfect": 10
+    },
+    "ended_at": "2026-04-28T14:13:33.753959+00:00",
+    "hit_rate": 81.25,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 12.5,
+      "Good": 0.0,
+      "Great": 6.25,
+      "Miss": 18.75,
+      "Perfect": 62.5
+    },
+    "perfect_early": 4,
+    "perfect_late": 6,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 68.75,
+        "counts": {
+          "Bad": 2,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 3,
+          "Perfect": 10
+        },
+        "hit_rate": 81.25,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 12.5,
+          "Good": 0.0,
+          "Great": 6.25,
+          "Miss": 18.75,
+          "Perfect": 62.5
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "32094a3b7c2247779bf3d931b7eac030",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:13:36.939046+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "18550d58a02146bdb8a90a455af5aa09",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 93.75,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 5,
+      "Miss": 1,
+      "Perfect": 10
+    },
+    "ended_at": "2026-04-28T14:13:46.583678+00:00",
+    "hit_rate": 93.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 31.25,
+      "Miss": 6.25,
+      "Perfect": 62.5
+    },
+    "perfect_early": 4,
+    "perfect_late": 6,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 93.75,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 5,
+          "Miss": 1,
+          "Perfect": 10
+        },
+        "hit_rate": 93.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 31.25,
+          "Miss": 6.25,
+          "Perfect": 62.5
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "412d9104ee2a4b07bcb92f21dac73bdb",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:13:51.135382+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "2d5fbeffe7d1430a83fbef833983178c",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 2,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 14,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:14:02.940235+00:00",
+    "hit_rate": 12.5,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 12.5,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 87.5,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 14,
+          "Perfect": 0
+        },
+        "hit_rate": 12.5,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 12.5,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 87.5,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "af2f0f3bad2d4b51a0a66effc4501fe9",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 31.25,
+    "counts": {
+      "Bad": 0,
+      "Good": 1,
+      "Great": 1,
+      "Miss": 11,
+      "Perfect": 3
+    },
+    "ended_at": "2026-04-28T14:14:13.157698+00:00",
+    "hit_rate": 31.25,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 6.25,
+      "Great": 6.25,
+      "Miss": 68.75,
+      "Perfect": 18.75
+    },
+    "perfect_early": 2,
+    "perfect_late": 1,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 31.25,
+        "counts": {
+          "Bad": 0,
+          "Good": 1,
+          "Great": 1,
+          "Miss": 11,
+          "Perfect": 3
+        },
+        "hit_rate": 31.25,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 6.25,
+          "Great": 6.25,
+          "Miss": 68.75,
+          "Perfect": 18.75
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "73b2e33303834e6d8cc2591af8e55353",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:14:16.701427+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "a7d0cb3c368e494781cdb331261e53eb",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 93.75,
+    "counts": {
+      "Bad": 1,
+      "Good": 2,
+      "Great": 3,
+      "Miss": 0,
+      "Perfect": 10
+    },
+    "ended_at": "2026-04-28T14:14:25.700248+00:00",
+    "hit_rate": 100.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 6.25,
+      "Good": 12.5,
+      "Great": 18.75,
+      "Miss": 0.0,
+      "Perfect": 62.5
+    },
+    "perfect_early": 4,
+    "perfect_late": 6,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 93.75,
+        "counts": {
+          "Bad": 1,
+          "Good": 2,
+          "Great": 3,
+          "Miss": 0,
+          "Perfect": 10
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 6.25,
+          "Good": 12.5,
+          "Great": 18.75,
+          "Miss": 0.0,
+          "Perfect": 62.5
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "2b95d2ba99104685976c195be22ebeae",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:14:26.741498+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "2f72712d67934131b9335560c08e8ef1",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 93.75,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 1,
+      "Miss": 1,
+      "Perfect": 14
+    },
+    "ended_at": "2026-04-28T14:14:35.404190+00:00",
+    "hit_rate": 93.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 6.25,
+      "Miss": 6.25,
+      "Perfect": 87.5
+    },
+    "perfect_early": 11,
+    "perfect_late": 3,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 93.75,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 1,
+          "Perfect": 14
+        },
+        "hit_rate": 93.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 6.25,
+          "Miss": 6.25,
+          "Perfect": 87.5
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "01c14c5a318f45ef951525ffa130fa2e",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:14:40.015564+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "fdd8a12b680147abb52cdff44cacdf14",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:15:06.871282+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 4700,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "a0348c1a79b04f1ebcec293a12341496",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:15:30.359501+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 4700,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "37aec4deb93f4c78b2c54b4668e8a915",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 1,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 15,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:15:43.993632+00:00",
+    "hit_rate": 6.25,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 4700,
+    "percentages": {
+      "Bad": 6.25,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 93.75,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 1,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 15,
+          "Perfect": 0
+        },
+        "hit_rate": 6.25,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 6.25,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 93.75,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "9b5ca5a296894351bbf511b7c7ee42fd",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 57.714285714285715,
+    "counts": {
+      "Bad": 59,
+      "Good": 31,
+      "Great": 36,
+      "Miss": 15,
+      "Perfect": 34
+    },
+    "ended_at": "2026-04-28T14:19:03.668220+00:00",
+    "hit_rate": 91.42857142857143,
+    "input_offset_ms": 0,
+    "mode": "quick",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 33.714285714285715,
+      "Good": 17.71428571428571,
+      "Great": 20.57142857142857,
+      "Miss": 8.571428571428571,
+      "Perfect": 19.428571428571427
+    },
+    "perfect_early": 18,
+    "perfect_late": 15,
+    "practice_pattern": null,
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 1,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 3,
+          "Perfect": 0
+        },
+        "hit_rate": 25.0,
+        "instance": 1,
+        "label": "Warmup_1",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 75.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 1,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 3,
+          "Perfect": 0
+        },
+        "hit_rate": 25.0,
+        "instance": 2,
+        "label": "Warmup_2",
+        "min_time": 2900,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 75.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 1,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 3,
+          "Perfect": 0
+        },
+        "hit_rate": 25.0,
+        "instance": 3,
+        "label": "Warmup_3",
+        "min_time": 4800,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 75.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Warmup_4",
+        "min_time": 6700,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 37.5,
+        "counts": {
+          "Bad": 5,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 2
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "SpeedTap_1",
+        "min_time": 8600,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 62.5,
+          "Good": 0.0,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 25.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 62.5,
+        "counts": {
+          "Bad": 3,
+          "Good": 1,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 3
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "SpeedTap_2",
+        "min_time": 10750,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 37.5,
+          "Good": 12.5,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 37.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 87.5,
+        "counts": {
+          "Bad": 1,
+          "Good": 1,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 5
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "SpeedTap_3",
+        "min_time": 12900,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 12.5,
+          "Good": 12.5,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 62.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 5
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "SpeedTap_4",
+        "min_time": 15050,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 0.0,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 62.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 42.857142857142854,
+        "counts": {
+          "Bad": 3,
+          "Good": 2,
+          "Great": 1,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 85.71428571428571,
+        "instance": 1,
+        "label": "Linear Stream (1234321)_1",
+        "min_time": 17200,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 42.857142857142854,
+          "Good": 28.57142857142857,
+          "Great": 14.285714285714285,
+          "Miss": 14.285714285714285,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 71.42857142857143,
+        "counts": {
+          "Bad": 2,
+          "Good": 1,
+          "Great": 2,
+          "Miss": 0,
+          "Perfect": 2
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "Linear Stream (1234321)_2",
+        "min_time": 18350,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 28.57142857142857,
+          "Good": 14.285714285714285,
+          "Great": 28.57142857142857,
+          "Miss": 0.0,
+          "Perfect": 28.57142857142857
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 85.71428571428571,
+        "counts": {
+          "Bad": 1,
+          "Good": 1,
+          "Great": 3,
+          "Miss": 0,
+          "Perfect": 2
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "Linear Stream (1234321)_3",
+        "min_time": 19500,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 14.285714285714285,
+          "Good": 14.285714285714285,
+          "Great": 42.857142857142854,
+          "Miss": 0.0,
+          "Perfect": 28.57142857142857
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 85.71428571428571,
+        "counts": {
+          "Bad": 1,
+          "Good": 1,
+          "Great": 3,
+          "Miss": 0,
+          "Perfect": 2
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Linear Stream (1234321)_4",
+        "min_time": 20650,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 14.285714285714285,
+          "Good": 14.285714285714285,
+          "Great": 42.857142857142854,
+          "Miss": 0.0,
+          "Perfect": 28.57142857142857
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 3,
+          "Great": 2,
+          "Miss": 0,
+          "Perfect": 1
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "Alternating Split (13241324)_1",
+        "min_time": 21800,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 37.5,
+          "Great": 25.0,
+          "Miss": 0.0,
+          "Perfect": 12.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 0,
+          "Great": 2,
+          "Miss": 0,
+          "Perfect": 4
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "Alternating Split (13241324)_2",
+        "min_time": 23075,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 0.0,
+          "Great": 25.0,
+          "Miss": 0.0,
+          "Perfect": 50.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 62.5,
+        "counts": {
+          "Bad": 3,
+          "Good": 4,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "Alternating Split (13241324)_3",
+        "min_time": 24350,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 37.5,
+          "Good": 50.0,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 25.0,
+        "counts": {
+          "Bad": 5,
+          "Good": 1,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 1
+        },
+        "hit_rate": 87.5,
+        "instance": 4,
+        "label": "Alternating Split (13241324)_4",
+        "min_time": 25625,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 62.5,
+          "Good": 12.5,
+          "Great": 0.0,
+          "Miss": 12.5,
+          "Perfect": 12.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 62.5,
+        "counts": {
+          "Bad": 3,
+          "Good": 1,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 4
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "Inward-Outward (14231423)_1",
+        "min_time": 26900,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 37.5,
+          "Good": 12.5,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 50.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 100.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 3,
+          "Great": 5,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "Inward-Outward (14231423)_2",
+        "min_time": 28175,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 37.5,
+          "Great": 62.5,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 50.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 3,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "Inward-Outward (14231423)_3",
+        "min_time": 29450,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 50.0,
+          "Good": 37.5,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 87.5,
+        "counts": {
+          "Bad": 1,
+          "Good": 4,
+          "Great": 3,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Inward-Outward (14231423)_4",
+        "min_time": 30725,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 12.5,
+          "Good": 50.0,
+          "Great": 37.5,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 87.5,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 5,
+          "Miss": 1,
+          "Perfect": 2
+        },
+        "hit_rate": 87.5,
+        "instance": 5,
+        "label": "Alternating Split (13241324)_5",
+        "min_time": 32000,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 62.5,
+          "Miss": 12.5,
+          "Perfect": 25.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 4,
+          "Great": 2,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 5,
+        "label": "SpeedTap_5",
+        "min_time": 33275,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 50.0,
+          "Great": 25.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 14.285714285714285,
+        "counts": {
+          "Bad": 5,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 1
+        },
+        "hit_rate": 85.71428571428571,
+        "instance": 5,
+        "label": "Linear Stream (1234321)_5",
+        "min_time": 35425,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 71.42857142857143,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 14.285714285714285,
+          "Perfect": 14.285714285714285
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 12.5,
+        "counts": {
+          "Bad": 6,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 87.5,
+        "instance": 5,
+        "label": "Inward-Outward (14231423)_5",
+        "min_time": 36575,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 0.0,
+          "Great": 12.5,
+          "Miss": 12.5,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 50.0,
+        "counts": {
+          "Bad": 1,
+          "Good": 1,
+          "Great": 1,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 75.0,
+        "instance": 5,
+        "label": "Warmup_5",
+        "min_time": 37850,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 25.0,
+          "Great": 25.0,
+          "Miss": 25.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      }
+    ],
+    "session_id": "275e687b7e764b4a8d986d9e6dd76225",
+    "total": 175
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 175,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:19:07.160791+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "quick",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": null,
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup_1",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "Warmup_2",
+        "min_time": 2900,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 3,
+        "label": "Warmup_3",
+        "min_time": 4800,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 4,
+        "label": "Warmup_4",
+        "min_time": 6700,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "SpeedTap_1",
+        "min_time": 8600,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "SpeedTap_2",
+        "min_time": 10750,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 3,
+        "label": "SpeedTap_3",
+        "min_time": 12900,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 4,
+        "label": "SpeedTap_4",
+        "min_time": 15050,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 7,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Linear Stream (1234321)_1",
+        "min_time": 17200,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 7,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "Linear Stream (1234321)_2",
+        "min_time": 18350,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 7,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 3,
+        "label": "Linear Stream (1234321)_3",
+        "min_time": 19500,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 7,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 4,
+        "label": "Linear Stream (1234321)_4",
+        "min_time": 20650,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Alternating Split (13241324)_1",
+        "min_time": 21800,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "Alternating Split (13241324)_2",
+        "min_time": 23075,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 3,
+        "label": "Alternating Split (13241324)_3",
+        "min_time": 24350,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 4,
+        "label": "Alternating Split (13241324)_4",
+        "min_time": 25625,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Inward-Outward (14231423)_1",
+        "min_time": 26900,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "Inward-Outward (14231423)_2",
+        "min_time": 28175,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 3,
+        "label": "Inward-Outward (14231423)_3",
+        "min_time": 29450,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 4,
+        "label": "Inward-Outward (14231423)_4",
+        "min_time": 30725,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 5,
+        "label": "Inward-Outward (14231423)_5",
+        "min_time": 32000,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 7,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 5,
+        "label": "Linear Stream (1234321)_5",
+        "min_time": 33275,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 5,
+        "label": "Alternating Split (13241324)_5",
+        "min_time": 34425,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 8,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 5,
+        "label": "SpeedTap_5",
+        "min_time": 35700,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 5,
+        "label": "Warmup_5",
+        "min_time": 37850,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      }
+    ],
+    "session_id": "ca0f52d84daa4712963018608065d9a2",
+    "total": 175
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:19:34.066967+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "18a92e9b4fc9467a912e7279c2b930f5",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 32,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:44:33.245984+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": -70,
+    "mode": "practice",
+    "note_travel_ms": 2200,
+    "offsets": [
+      151098,
+      150848,
+      150598,
+      150348,
+      150098,
+      149848,
+      149598,
+      149348,
+      148948,
+      148698,
+      148448,
+      148198,
+      147948,
+      147698,
+      147448,
+      147198,
+      146798,
+      146548,
+      146298,
+      146048,
+      145798,
+      145548,
+      145298,
+      145048,
+      144648,
+      144398,
+      144148,
+      143898,
+      143648,
+      143398,
+      143148,
+      142898
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "SpeedTap",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 32,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "SpeedTap",
+        "min_time": 1000,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 32
+      }
+    ],
+    "session_id": "773dd805aa4f4830962212a7c15b054c",
+    "total": 32
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 3.125,
+    "counts": {
+      "Bad": 9,
+      "Good": 1,
+      "Great": 0,
+      "Miss": 22,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:44:49.080923+00:00",
+    "hit_rate": 31.25,
+    "input_offset_ms": -70,
+    "mode": "practice",
+    "note_travel_ms": 2200,
+    "offsets": [
+      5630,
+      5380,
+      5130,
+      4880,
+      4630,
+      4380,
+      4130,
+      3880,
+      3480,
+      3230,
+      2980,
+      2730,
+      2480,
+      2230,
+      1980,
+      1730,
+      1330,
+      1080,
+      830,
+      580,
+      330,
+      -6264,
+      -5797,
+      -6317,
+      -4920,
+      -6379,
+      -5412,
+      -778,
+      -126,
+      171,
+      -305,
+      -134
+    ],
+    "percentages": {
+      "Bad": 28.125,
+      "Good": 3.125,
+      "Great": 0.0,
+      "Miss": 68.75,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "SpeedTap",
+    "sections": [
+      {
+        "clean_rate": 3.125,
+        "counts": {
+          "Bad": 9,
+          "Good": 1,
+          "Great": 0,
+          "Miss": 22,
+          "Perfect": 0
+        },
+        "hit_rate": 31.25,
+        "instance": 1,
+        "label": "SpeedTap",
+        "min_time": 1000,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 28.125,
+          "Good": 3.125,
+          "Great": 0.0,
+          "Miss": 68.75,
+          "Perfect": 0.0
+        },
+        "total": 32
+      }
+    ],
+    "session_id": "859519af5add46edaa0f46e8df68762d",
+    "total": 32
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 20.0,
+    "counts": {
+      "Bad": 117,
+      "Good": 17,
+      "Great": 8,
+      "Miss": 23,
+      "Perfect": 10
+    },
+    "ended_at": "2026-04-28T14:53:31.420324+00:00",
+    "hit_rate": 86.85714285714286,
+    "input_offset_ms": 0,
+    "mode": "quick",
+    "note_travel_ms": 2000,
+    "offsets": [
+      3890,
+      3390,
+      2890,
+      2390,
+      1990,
+      1490,
+      990,
+      490,
+      -4418,
+      -2968,
+      -4030,
+      -3392,
+      -5392,
+      -4730,
+      -3571,
+      -2072,
+      -5793,
+      -5384,
+      -4804,
+      -3575,
+      -6584,
+      -6004,
+      -5397,
+      -4542,
+      -7172,
+      -6724,
+      -6125,
+      -5185,
+      -7866,
+      -7366,
+      -6745,
+      -5935,
+      -8505,
+      -8153,
+      -6947,
+      -4193,
+      6,
+      171,
+      -57,
+      74,
+      -95,
+      -56,
+      -186,
+      -292,
+      -158,
+      -168,
+      -114,
+      -184,
+      -423,
+      -347,
+      -392,
+      -376,
+      -359,
+      -403,
+      -368,
+      -346,
+      -288,
+      -350,
+      -354,
+      -318,
+      -423,
+      -427,
+      -406,
+      -328,
+      -392,
+      -356,
+      -465,
+      -280,
+      -429,
+      -245,
+      -208,
+      -273,
+      -237,
+      -242,
+      -306,
+      -289,
+      -181,
+      -185,
+      -169,
+      -213,
+      -257,
+      -510,
+      -97,
+      -557,
+      188,
+      -157,
+      -141,
+      -145,
+      -230,
+      -424,
+      178,
+      178,
+      20,
+      -24,
+      -28,
+      -133,
+      -138,
+      -139,
+      -649,
+      -168,
+      179,
+      -67,
+      -112,
+      -56,
+      -101,
+      -145,
+      -123,
+      -107,
+      -306,
+      -311,
+      -525,
+      -259,
+      -325,
+      193,
+      186,
+      184,
+      -92,
+      -122,
+      -225,
+      184,
+      -11,
+      -40,
+      -165,
+      185,
+      -62,
+      -89,
+      -94,
+      -119,
+      -153,
+      -192,
+      -703,
+      -165,
+      179,
+      -210,
+      -325,
+      -22,
+      182,
+      -295,
+      31,
+      178,
+      -305,
+      176,
+      -506,
+      -52,
+      172,
+      -181,
+      3,
+      -548,
+      -1458,
+      173,
+      -265,
+      -469,
+      -545,
+      -155,
+      -201,
+      -332,
+      -587,
+      -895,
+      -126,
+      98,
+      -432,
+      -536,
+      -312,
+      -110,
+      -345,
+      -155,
+      -221,
+      -326,
+      -123,
+      -97,
+      -152,
+      -264,
+      -197,
+      -98,
+      -50
+    ],
+    "percentages": {
+      "Bad": 66.85714285714286,
+      "Good": 9.714285714285714,
+      "Great": 4.571428571428571,
+      "Miss": 13.142857142857142,
+      "Perfect": 5.714285714285714
+    },
+    "perfect_early": 6,
+    "perfect_late": 4,
+    "practice_pattern": null,
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup_1",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 4,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 2,
+        "label": "Warmup_2",
+        "min_time": 2900,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "Warmup_3",
+        "min_time": 4800,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Warmup_4",
+        "min_time": 6700,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 8,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "SpeedTap_1",
+        "min_time": 8600,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 12.5,
+        "counts": {
+          "Bad": 7,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 1
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "SpeedTap_2",
+        "min_time": 10750,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 87.5,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 12.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 37.5,
+        "counts": {
+          "Bad": 4,
+          "Good": 1,
+          "Great": 2,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 87.5,
+        "instance": 3,
+        "label": "SpeedTap_3",
+        "min_time": 12900,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 50.0,
+          "Good": 12.5,
+          "Great": 25.0,
+          "Miss": 12.5,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 25.0,
+        "counts": {
+          "Bad": 6,
+          "Good": 1,
+          "Great": 1,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "SpeedTap_4",
+        "min_time": 15050,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 12.5,
+          "Great": 12.5,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 7,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 1,
+        "label": "Linear Stream (1234321)_1",
+        "min_time": 17200,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 7,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 2,
+        "label": "Linear Stream (1234321)_2",
+        "min_time": 18350,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 7,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 3,
+        "label": "Linear Stream (1234321)_3",
+        "min_time": 19500,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 7,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Linear Stream (1234321)_4",
+        "min_time": 20650,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 100.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 12.5,
+        "counts": {
+          "Bad": 6,
+          "Good": 1,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 87.5,
+        "instance": 1,
+        "label": "Alternating Split (13241324)_1",
+        "min_time": 21800,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 12.5,
+          "Great": 0.0,
+          "Miss": 12.5,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 6,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 2,
+          "Perfect": 0
+        },
+        "hit_rate": 75.0,
+        "instance": 2,
+        "label": "Alternating Split (13241324)_2",
+        "min_time": 23075,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 25.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 37.5,
+        "counts": {
+          "Bad": 4,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 3
+        },
+        "hit_rate": 87.5,
+        "instance": 3,
+        "label": "Alternating Split (13241324)_3",
+        "min_time": 24350,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 50.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 12.5,
+          "Perfect": 37.5
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 2,
+          "Good": 4,
+          "Great": 2,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 4,
+        "label": "Alternating Split (13241324)_4",
+        "min_time": 25625,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 50.0,
+          "Great": 25.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 5,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 3,
+          "Perfect": 0
+        },
+        "hit_rate": 62.5,
+        "instance": 1,
+        "label": "Inward-Outward (14231423)_1",
+        "min_time": 26900,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 62.5,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 37.5,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 50.0,
+        "counts": {
+          "Bad": 3,
+          "Good": 2,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 2
+        },
+        "hit_rate": 87.5,
+        "instance": 2,
+        "label": "Inward-Outward (14231423)_2",
+        "min_time": 28175,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 37.5,
+          "Good": 25.0,
+          "Great": 0.0,
+          "Miss": 12.5,
+          "Perfect": 25.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 50.0,
+        "counts": {
+          "Bad": 3,
+          "Good": 2,
+          "Great": 2,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 87.5,
+        "instance": 3,
+        "label": "Inward-Outward (14231423)_3",
+        "min_time": 29450,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 37.5,
+          "Good": 25.0,
+          "Great": 25.0,
+          "Miss": 12.5,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 25.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 2,
+          "Perfect": 2
+        },
+        "hit_rate": 75.0,
+        "instance": 4,
+        "label": "Inward-Outward (14231423)_4",
+        "min_time": 30725,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 50.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 25.0,
+          "Perfect": 25.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 28.57142857142857,
+        "counts": {
+          "Bad": 3,
+          "Good": 0,
+          "Great": 1,
+          "Miss": 2,
+          "Perfect": 1
+        },
+        "hit_rate": 71.42857142857143,
+        "instance": 5,
+        "label": "Linear Stream (1234321)_5",
+        "min_time": 32000,
+        "pattern": "Linear Stream (1234321)",
+        "percentages": {
+          "Bad": 42.857142857142854,
+          "Good": 0.0,
+          "Great": 14.285714285714285,
+          "Miss": 28.57142857142857,
+          "Perfect": 14.285714285714285
+        },
+        "total": 7
+      },
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 3,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 1,
+          "Perfect": 0
+        },
+        "hit_rate": 75.0,
+        "instance": 5,
+        "label": "Warmup_5",
+        "min_time": 33150,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 25.0,
+          "Perfect": 0.0
+        },
+        "total": 4
+      },
+      {
+        "clean_rate": 25.0,
+        "counts": {
+          "Bad": 6,
+          "Good": 2,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 5,
+        "label": "Alternating Split (13241324)_5",
+        "min_time": 35050,
+        "pattern": "Alternating Split (13241324)",
+        "percentages": {
+          "Bad": 75.0,
+          "Good": 25.0,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 12.5,
+        "counts": {
+          "Bad": 7,
+          "Good": 1,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 0
+        },
+        "hit_rate": 100.0,
+        "instance": 5,
+        "label": "Inward-Outward (14231423)_5",
+        "min_time": 36325,
+        "pattern": "Inward-Outward (14231423)",
+        "percentages": {
+          "Bad": 87.5,
+          "Good": 12.5,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 0.0
+        },
+        "total": 8
+      },
+      {
+        "clean_rate": 50.0,
+        "counts": {
+          "Bad": 4,
+          "Good": 3,
+          "Great": 0,
+          "Miss": 0,
+          "Perfect": 1
+        },
+        "hit_rate": 100.0,
+        "instance": 5,
+        "label": "SpeedTap_5",
+        "min_time": 37600,
+        "pattern": "SpeedTap",
+        "percentages": {
+          "Bad": 50.0,
+          "Good": 37.5,
+          "Great": 0.0,
+          "Miss": 0.0,
+          "Perfect": 12.5
+        },
+        "total": 8
+      }
+    ],
+    "session_id": "5ee93ed1961e4a4ab92e4c6b2a68573a",
+    "total": 175
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:53:42.511339+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      49392,
+      48892,
+      48392,
+      47892,
+      47492,
+      46992,
+      46492,
+      45992,
+      45592,
+      45092,
+      44592,
+      44092,
+      43692,
+      43192,
+      42692,
+      42192
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "ee38fad390b046aca6e9d97d2c319d4f",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 93.75,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 7,
+      "Miss": 1,
+      "Perfect": 8
+    },
+    "ended_at": "2026-04-28T14:53:51.327312+00:00",
+    "hit_rate": 93.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      -25,
+      -53,
+      -42,
+      -54,
+      -64,
+      -74,
+      -42,
+      8,
+      -44,
+      182,
+      52,
+      23,
+      19,
+      -1,
+      -75,
+      -75
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 43.75,
+      "Miss": 6.25,
+      "Perfect": 50.0
+    },
+    "perfect_early": 5,
+    "perfect_late": 3,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 93.75,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 7,
+          "Miss": 1,
+          "Perfect": 8
+        },
+        "hit_rate": 93.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 43.75,
+          "Miss": 6.25,
+          "Perfect": 50.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "92f02baaa616483d975411b1e6215906",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:53:52.452550+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      8251,
+      7751,
+      7251,
+      6751,
+      6351,
+      5851,
+      5351,
+      4851,
+      4451,
+      3951,
+      3451,
+      2951,
+      2551,
+      2051,
+      1551,
+      1051
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "fdd65b588fc44836afcbea26a9676225",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 75.0,
+    "counts": {
+      "Bad": 3,
+      "Good": 2,
+      "Great": 2,
+      "Miss": 1,
+      "Perfect": 8
+    },
+    "ended_at": "2026-04-28T14:54:02.219229+00:00",
+    "hit_rate": 93.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      468,
+      49,
+      -65,
+      -152,
+      -125,
+      -133,
+      -145,
+      -13,
+      -12,
+      -2,
+      -30,
+      1,
+      9,
+      40,
+      69,
+      97
+    ],
+    "percentages": {
+      "Bad": 18.75,
+      "Good": 12.5,
+      "Great": 12.5,
+      "Miss": 6.25,
+      "Perfect": 50.0
+    },
+    "perfect_early": 4,
+    "perfect_late": 4,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 75.0,
+        "counts": {
+          "Bad": 3,
+          "Good": 2,
+          "Great": 2,
+          "Miss": 1,
+          "Perfect": 8
+        },
+        "hit_rate": 93.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 18.75,
+          "Good": 12.5,
+          "Great": 12.5,
+          "Miss": 6.25,
+          "Perfect": 50.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "8da7d450e4bc478c8d81f0e4d0a25e0e",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:54:14.067446+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      19144,
+      18644,
+      18144,
+      17644,
+      17244,
+      16744,
+      16244,
+      15744,
+      15344,
+      14844,
+      14344,
+      13844,
+      13444,
+      12944,
+      12444,
+      11944
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "3c1910598af9468b9868ff2b3175c503",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 56.25,
+    "counts": {
+      "Bad": 4,
+      "Good": 2,
+      "Great": 1,
+      "Miss": 3,
+      "Perfect": 6
+    },
+    "ended_at": "2026-04-28T14:54:24.082703+00:00",
+    "hit_rate": 81.25,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      858,
+      358,
+      31,
+      -136,
+      -183,
+      -186,
+      -65,
+      -148,
+      -113,
+      -94,
+      -11,
+      17,
+      -11,
+      171,
+      4,
+      -42
+    ],
+    "percentages": {
+      "Bad": 25.0,
+      "Good": 12.5,
+      "Great": 6.25,
+      "Miss": 18.75,
+      "Perfect": 37.5
+    },
+    "perfect_early": 3,
+    "perfect_late": 3,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 56.25,
+        "counts": {
+          "Bad": 4,
+          "Good": 2,
+          "Great": 1,
+          "Miss": 3,
+          "Perfect": 6
+        },
+        "hit_rate": 81.25,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 25.0,
+          "Good": 12.5,
+          "Great": 6.25,
+          "Miss": 18.75,
+          "Perfect": 37.5
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "94c8e2b469fd4cc5bbf7a404fe627e46",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:54:38.545271+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      21621,
+      21121,
+      20621,
+      20121,
+      19721,
+      19221,
+      18721,
+      18221,
+      17821,
+      17321,
+      16821,
+      16321,
+      15921,
+      15421,
+      14921,
+      14421
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "2fd32a75139e4a6ca5707d1e1edf599c",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 93.75,
+    "counts": {
+      "Bad": 0,
+      "Good": 4,
+      "Great": 3,
+      "Miss": 1,
+      "Perfect": 8
+    },
+    "ended_at": "2026-04-28T14:54:48.039337+00:00",
+    "hit_rate": 93.75,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      271,
+      -14,
+      -103,
+      -128,
+      -116,
+      3,
+      -65,
+      -129,
+      -27,
+      -6,
+      -72,
+      -34,
+      0,
+      -28,
+      -53,
+      23
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 25.0,
+      "Great": 18.75,
+      "Miss": 6.25,
+      "Perfect": 50.0
+    },
+    "perfect_early": 5,
+    "perfect_late": 2,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 93.75,
+        "counts": {
+          "Bad": 0,
+          "Good": 4,
+          "Great": 3,
+          "Miss": 1,
+          "Perfect": 8
+        },
+        "hit_rate": 93.75,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 25.0,
+          "Great": 18.75,
+          "Miss": 6.25,
+          "Perfect": 50.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "9a88d2a7cee5478aafe70ac7548b5320",
+    "total": 16
+  },
+  {
+    "bpm": 120,
+    "clean_rate": 0.0,
+    "counts": {
+      "Bad": 0,
+      "Good": 0,
+      "Great": 0,
+      "Miss": 16,
+      "Perfect": 0
+    },
+    "ended_at": "2026-04-28T14:54:48.955236+00:00",
+    "hit_rate": 0.0,
+    "input_offset_ms": 0,
+    "mode": "practice",
+    "note_travel_ms": 2000,
+    "offsets": [
+      8138,
+      7638,
+      7138,
+      6638,
+      6238,
+      5738,
+      5238,
+      4738,
+      4338,
+      3838,
+      3338,
+      2838,
+      2438,
+      1938,
+      1438,
+      938
+    ],
+    "percentages": {
+      "Bad": 0.0,
+      "Good": 0.0,
+      "Great": 0.0,
+      "Miss": 100.0,
+      "Perfect": 0.0
+    },
+    "perfect_early": 0,
+    "perfect_late": 0,
+    "practice_pattern": "Warmup",
+    "sections": [
+      {
+        "clean_rate": 0.0,
+        "counts": {
+          "Bad": 0,
+          "Good": 0,
+          "Great": 0,
+          "Miss": 16,
+          "Perfect": 0
+        },
+        "hit_rate": 0.0,
+        "instance": 1,
+        "label": "Warmup",
+        "min_time": 1000,
+        "pattern": "Warmup",
+        "percentages": {
+          "Bad": 0.0,
+          "Good": 0.0,
+          "Great": 0.0,
+          "Miss": 100.0,
+          "Perfect": 0.0
+        },
+        "total": 16
+      }
+    ],
+    "session_id": "af75e978fa8e48928992b4c893788da8",
+    "total": 16
+  }
+]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 import array
 
@@ -9,6 +10,7 @@ import pygame
 from camera.air_detector import AirDetector
 from data.analytics import generate_analytics
 from data.recorder import SessionRecorder
+from data.performance_store import append_history, load_history
 from game.chart_parser import ChartNote, build_note_sequence, load_chart
 from game.input_handler import InputEvent, InputHandler
 from game.judgment import MAX_JUDGE_WINDOW_MS, JudgmentResult, judge_timing
@@ -85,10 +87,10 @@ class GameEngine:
         config.width, config.height = self.screen.get_size()
         pygame.display.set_caption("Rhythm Game Trainer")
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont("Arial", 28)
-        self.small_font = pygame.font.SysFont("Arial", 22)
-        self.judgment_font = pygame.font.SysFont("Arial", 64, bold=True)
-        self.title_font = pygame.font.SysFont("Arial", 46, bold=True)
+        self.font = pygame.font.SysFont("Arial", 34)
+        self.small_font = pygame.font.SysFont("Arial", 26)
+        self.judgment_font = pygame.font.SysFont("Arial", 72, bold=True)
+        self.title_font = pygame.font.SysFont("Arial", 56, bold=True)
         self.chart = load_chart(config.chart_path)
         self.input_handler = InputHandler()
         self.air_detector = AirDetector()
@@ -98,10 +100,18 @@ class GameEngine:
         self._practice_index = 0
         self._results_index = 0
         self._settings_index = 0
+        self._performance_index = 0
+        self._performance_section_index = 0
         self._practice_pattern: str | None = None
         self._current_mode = "quick"
         self._last_session_summary: dict[str, object] | None = None
         self._judgment_counts: dict[str, int] = {}
+        self._performance_history = load_history()
+        if self._performance_history:
+            self._performance_index = len(self._performance_history) - 1
+        self._tuning_param: str | None = None
+        self._tuning_note_start_ms = 0
+        self._tuning_last_adjust_ms = 0
         self._session_complete = False
         self._session_saved = False
         self._active_holds: dict[int, HoldState] = {}
@@ -182,6 +192,7 @@ class GameEngine:
                     note_type="TAP",
                     duration_ms=int(note.duration_ms * scale),
                     pattern_name=note.pattern_name,
+                    pattern_instance=note.pattern_instance,
                 )
             )
         return sorted(scaled_notes, key=lambda note: note.time_ms)
@@ -208,6 +219,7 @@ class GameEngine:
                         note_type="TAP",
                         duration_ms=note.duration_ms,
                         pattern_name=pattern.name,
+                        pattern_instance=1,
                     )
                 )
             cursor_ms += duration + gap_ms
@@ -233,6 +245,13 @@ class GameEngine:
             self._shutdown()
 
     def _start_session(self, mode: str, practice_pattern: str | None) -> None:
+        # If a session is still active with recorded rows, finalize it first
+        if not getattr(self, "_session_complete", True) and getattr(self, "recorder", None) is not None:
+            try:
+                # attempt to end and persist the current session before starting a new one
+                self._end_session()
+            except Exception:
+                pass
         self._current_mode = mode
         self._practice_pattern = practice_pattern
         self._session_complete = False
@@ -243,40 +262,140 @@ class GameEngine:
     def _end_session(self) -> None:
         if self._session_complete:
             return
+        # Build summary from a stable copy of recorded rows so a concurrent reset
+        # doesn't clear the data before we persist it.
+        try:
+            rows_copy = list(self.recorder.rows)
+        except Exception:
+            rows_copy = []
+        summary = self._build_session_summary(rows=rows_copy)
+        total = int(summary.get("total", 0))
+        if total == 0:
+            # do not persist empty sessions; mark complete and return to menu
+            self._session_complete = True
+            self._ui_state = "practice_select" if self._current_mode == "practice" else "home"
+            return
         self._session_complete = True
+        # finalize (save) and append the real recorder contents
         self._finalize_session()
-        self._last_session_summary = self._build_session_summary()
+        self._last_session_summary = summary
+        try:
+            self._performance_history = append_history(summary)
+            self._performance_index = len(self._performance_history) - 1
+        except Exception:
+            self._performance_history = load_history()
+            self._performance_index = max(0, len(self._performance_history) - 1)
+        self._performance_section_index = 0
         self._results_index = 0
         self._ui_state = "results"
 
-    def _build_session_summary(self) -> dict[str, object]:
-        rows = self.recorder.rows
+    def _build_session_summary(self, rows: list[dict[str, object]] | None = None) -> dict[str, object]:
+        rows = rows if rows is not None else (self.recorder.rows if getattr(self, 'recorder', None) is not None else [])
+
+        def to_int(value: object, default: int = 0) -> int:
+            try:
+                return int(float(value))
+            except Exception:
+                return default
+
         total = len(rows)
-        counts = dict(self._judgment_counts)
-        hits = total - counts.get("Miss", 0)
-        clean_hits = sum(counts.get(item, 0) for item in ("Perfect", "Great", "Good"))
-        hit_rate = (hits / total) * 100.0 if total > 0 else 0.0
-        clean_rate = (clean_hits / total) * 100.0 if total > 0 else 0.0
-        pattern_stats: dict[str, dict[str, object]] = {}
+        counts: dict[str, int] = {"Perfect": 0, "Great": 0, "Good": 0, "Bad": 0, "Miss": 0}
+        perfect_early = 0
+        perfect_late = 0
+        offsets: list[int] = []
+
+        section_stats: dict[tuple[str, int], dict[str, object]] = {}
         for row in rows:
-            pattern = str(row.get("pattern_name", "Unknown") or "Unknown")
             judgment = str(row.get("judgment", ""))
-            stats = pattern_stats.setdefault(pattern, {"total": 0, "hits": 0, "clean": 0})
+            if judgment in counts:
+                counts[judgment] += 1
+            pattern = str(row.get("pattern_name", "Unknown") or "Unknown")
+            instance = to_int(row.get("pattern_instance"), 1)
+            key = (pattern, instance)
+            stats = section_stats.setdefault(
+                key,
+                {
+                    "pattern": pattern,
+                    "instance": instance,
+                    "total": 0,
+                    "counts": {"Perfect": 0, "Great": 0, "Good": 0, "Bad": 0, "Miss": 0},
+                    "min_time": None,
+                },
+            )
             stats["total"] += 1
-            if judgment != "Miss":
-                stats["hits"] += 1
-            if judgment in {"Perfect", "Great", "Good"}:
-                stats["clean"] += 1
-        for stats in pattern_stats.values():
-            total_notes = stats["total"]
-            stats["hit_rate"] = (stats["hits"] / total_notes) * 100.0 if total_notes else 0.0
-            stats["clean_rate"] = (stats["clean"] / total_notes) * 100.0 if total_notes else 0.0
+            if judgment in stats["counts"]:
+                stats["counts"][judgment] += 1
+            expected_time = to_int(row.get("expected_time"), 0)
+            min_time = stats["min_time"]
+            if min_time is None or expected_time < min_time:
+                stats["min_time"] = expected_time
+            if judgment == "Perfect":
+                offset = to_int(row.get("offset_ms"), 0)
+                if offset < 0:
+                    perfect_early += 1
+                elif offset > 0:
+                    perfect_late += 1
+            offsets.append(to_int(row.get("offset_ms"), 0))
+
+        hits = total - counts.get("Miss", 0)
+        hit_rate = (hits / total) * 100.0 if total > 0 else 0.0
+        clean_hits = sum(counts.get(item, 0) for item in ("Perfect", "Great", "Good"))
+        clean_rate = (clean_hits / total) * 100.0 if total > 0 else 0.0
+        percentages = {
+            key: (value / total) * 100.0 if total > 0 else 0.0
+            for key, value in counts.items()
+        }
+
+        pattern_occurrences: dict[str, int] = {}
+        for pattern, _ in section_stats:
+            pattern_occurrences[pattern] = pattern_occurrences.get(pattern, 0) + 1
+
+        sections = []
+        for key, stats in section_stats.items():
+            pattern = stats["pattern"]
+            instance = stats["instance"]
+            label = pattern
+            if pattern_occurrences.get(pattern, 0) > 1:
+                label = f"{pattern}_{instance}"
+            counts_for_section = stats["counts"]
+            section_total = stats["total"]
+            section_hits = section_total - counts_for_section.get("Miss", 0)
+            section_clean = sum(counts_for_section.get(item, 0) for item in ("Perfect", "Great", "Good"))
+            sections.append(
+                {
+                    "label": label,
+                    "pattern": pattern,
+                    "instance": instance,
+                    "total": section_total,
+                    "counts": counts_for_section,
+                    "hit_rate": (section_hits / section_total) * 100.0 if section_total else 0.0,
+                    "clean_rate": (section_clean / section_total) * 100.0 if section_total else 0.0,
+                    "percentages": {
+                        key: (value / section_total) * 100.0 if section_total else 0.0
+                        for key, value in counts_for_section.items()
+                    },
+                    "min_time": stats["min_time"] if stats["min_time"] is not None else 0,
+                }
+            )
+        sections.sort(key=lambda item: item.get("min_time", 0))
+
         return {
+            "session_id": self.recorder.session_id,
+            "ended_at": datetime.now(timezone.utc).isoformat(),
+            "mode": self._current_mode,
+            "practice_pattern": self._practice_pattern,
+            "bpm": self.config.bpm,
+            "note_travel_ms": self.note_travel_ms,
+            "input_offset_ms": self.input_offset_ms,
             "total": total,
             "hit_rate": hit_rate,
             "clean_rate": clean_rate,
             "counts": counts,
-            "pattern_stats": pattern_stats,
+            "percentages": percentages,
+            "perfect_early": perfect_early,
+            "perfect_late": perfect_late,
+            "offsets": offsets,
+            "sections": sections,
         }
 
     def _handle_events(self, events: list[InputEvent], quit_requested: bool) -> None:
@@ -284,6 +403,9 @@ class GameEngine:
             self.running = False
             return
         for event in events:
+            if self._ui_state == "tuning":
+                self._handle_tuning_input(event)
+                continue
             if self._ui_state != "play":
                 if event.action == "restart" and self._ui_state == "results":
                     self._start_session(self._current_mode, self._practice_pattern)
@@ -310,20 +432,12 @@ class GameEngine:
         }:
             action = event.action
         elif event.zone is not None and event.pressed:
-            if self._ui_state == "settings":
-                mapping = {
-                    1: "menu_left",
-                    2: "menu_right",
-                    3: "menu_down",
-                    4: "menu_back",
-                }
-            else:
-                mapping = {
-                    1: "menu_up",
-                    2: "menu_down",
-                    3: "menu_select",
-                    4: "menu_back",
-                }
+            mapping = {
+                1: "menu_up",
+                2: "menu_down",
+                3: "menu_select",
+                4: "menu_back",
+            }
             action = mapping.get(event.zone)
         if action is None:
             return
@@ -335,9 +449,10 @@ class GameEngine:
             self._handle_settings_menu_action(action)
         elif self._ui_state == "results":
             self._handle_results_menu_action(action)
-        elif self._ui_state == "performance":
-            if action in {"menu_back", "menu_select"}:
-                self._ui_state = "home"
+        elif self._ui_state == "performance_list":
+            self._handle_performance_list_action(action)
+        elif self._ui_state == "performance_detail":
+            self._handle_performance_detail_action(action)
 
     def _handle_home_menu_action(self, action: str) -> None:
         if action == "menu_up":
@@ -352,7 +467,7 @@ class GameEngine:
                 self._practice_index = 0
                 self._ui_state = "practice_select"
             elif selection == "Performance":
-                self._ui_state = "performance"
+                self._ui_state = "performance_list"
             elif selection == "Settings":
                 self._settings_index = 0
                 self._ui_state = "settings"
@@ -381,20 +496,13 @@ class GameEngine:
             self._settings_index = (self._settings_index - 1) % len(SETTINGS_MENU)
         elif action == "menu_down":
             self._settings_index = (self._settings_index + 1) % len(SETTINGS_MENU)
-        elif action in {"menu_left", "menu_right"}:
-            delta = -1 if action == "menu_left" else 1
-            if self._settings_index == 0:
-                self.note_travel_ms = max(
-                    NOTE_TRAVEL_MIN_MS,
-                    min(NOTE_TRAVEL_MAX_MS, self.note_travel_ms + (delta * NOTE_TRAVEL_STEP_MS)),
-                )
-            elif self._settings_index == 1:
-                self.input_offset_ms = max(
-                    INPUT_OFFSET_MIN_MS,
-                    min(INPUT_OFFSET_MAX_MS, self.input_offset_ms + (delta * INPUT_OFFSET_STEP_MS)),
-                )
         elif action == "menu_select":
-            if SETTINGS_MENU[self._settings_index] == "Back":
+            selection = SETTINGS_MENU[self._settings_index]
+            if selection == "Note Travel (ms)":
+                self._start_tuning("note_travel_ms")
+            elif selection == "Input Offset (ms)":
+                self._start_tuning("input_offset_ms")
+            elif selection == "Back":
                 self._ui_state = "home"
         elif action == "menu_back":
             self._ui_state = "home"
@@ -409,9 +517,43 @@ class GameEngine:
             if selection == "Retry":
                 self._start_session(self._current_mode, self._practice_pattern)
             elif selection == "Detailed Performance":
-                self._ui_state = "performance"
+                if self._performance_history:
+                    self._performance_index = len(self._performance_history) - 1
+                    self._performance_section_index = 0
+                    self._ui_state = "performance_detail"
+                else:
+                    self._ui_state = "performance_list"
             elif selection == "Return Home":
                 self._ui_state = "home"
+        elif action == "menu_back":
+            self._ui_state = "home"
+
+    def _handle_performance_list_action(self, action: str) -> None:
+        if not self._performance_history:
+            if action in {"menu_back", "menu_select"}:
+                self._ui_state = "home"
+            return
+        if action == "menu_up":
+            self._performance_index = (self._performance_index - 1) % len(self._performance_history)
+        elif action == "menu_down":
+            self._performance_index = (self._performance_index + 1) % len(self._performance_history)
+        elif action == "menu_select":
+            self._performance_section_index = 0
+            self._ui_state = "performance_detail"
+        elif action == "menu_back":
+            self._ui_state = "home"
+
+    def _handle_performance_detail_action(self, action: str) -> None:
+        sections = self._current_sections()
+        if action == "menu_up" and sections:
+            self._performance_section_index = (self._performance_section_index - 1) % len(sections)
+        elif action == "menu_down" and sections:
+            self._performance_section_index = (self._performance_section_index + 1) % len(sections)
+        elif action == "menu_select" and sections:
+            current_section = sections[self._performance_section_index]
+            pattern = str(current_section.get("pattern", ""))
+            if pattern:
+                self._start_session("practice", pattern)
         elif action == "menu_back":
             self._ui_state = "home"
 
@@ -421,6 +563,9 @@ class GameEngine:
         return items
 
     def _update(self, now_ms: int) -> None:
+        if self._ui_state == "tuning":
+            self._update_tuning(now_ms)
+            return
         if self._ui_state != "play":
             return
         self._tick_metronome(now_ms)
@@ -577,6 +722,7 @@ class GameEngine:
             session_id=self.recorder.session_id,
             timestamp=self.recorder.session_timestamp(),
             pattern_name=note.pattern_name,
+            pattern_instance=note.pattern_instance,
             note_type=note.note_type,
             zone=zone,
             expected_time=note.time_ms,
@@ -649,8 +795,14 @@ class GameEngine:
         if self._ui_state == "settings":
             self._draw_settings()
             return
-        if self._ui_state == "performance":
-            self._draw_performance()
+        if self._ui_state == "tuning":
+            self._draw_tuning()
+            return
+        if self._ui_state == "performance_list":
+            self._draw_performance_list()
+            return
+        if self._ui_state == "performance_detail":
+            self._draw_performance_detail()
             return
         if self._ui_state == "results":
             self._draw_results()
@@ -684,16 +836,13 @@ class GameEngine:
         self._draw_footer("Select a pattern to practice")
 
     def _draw_settings(self) -> None:
-        self.screen.fill((12, 12, 18))
-        title = self.title_font.render("Settings", True, (240, 240, 240))
-        self.screen.blit(title, title.get_rect(center=(self.config.width // 2, 80)))
         lines = [
             f"{SETTINGS_MENU[0]}: {self.note_travel_ms}",
             f"{SETTINGS_MENU[1]}: {self.input_offset_ms}",
             SETTINGS_MENU[2],
         ]
-        self._draw_menu_items(lines, self._settings_index, start_y=160)
-        self._draw_footer("GPIO: 1/2 = -/+ | 3 = next | 4 = back")
+        self._draw_menu("Settings", lines, self._settings_index)
+        self._draw_footer("Select a setting to tune")
 
     def _draw_results(self) -> None:
         self.screen.fill((12, 12, 18))
@@ -704,41 +853,148 @@ class GameEngine:
         hit_rate = float(summary.get("hit_rate", 0.0))
         clean_rate = float(summary.get("clean_rate", 0.0))
         counts = summary.get("counts", {}) if isinstance(summary.get("counts", {}), dict) else {}
+        percentages = summary.get("percentages", {}) if isinstance(summary.get("percentages", {}), dict) else {}
+        perfect_early = int(summary.get("perfect_early", 0))
+        perfect_late = int(summary.get("perfect_late", 0))
         lines = [
             f"Total Notes: {total}",
             f"Hit Rate: {hit_rate:.1f}%",
             f"Clean Rate: {clean_rate:.1f}%",
-            f"Perfect: {counts.get('Perfect', 0)} | Great: {counts.get('Great', 0)} | Good: {counts.get('Good', 0)}",
-            f"Bad: {counts.get('Bad', 0)} | Miss: {counts.get('Miss', 0)}",
+            f"Perfect: {counts.get('Perfect', 0)} ({percentages.get('Perfect', 0.0):.1f}%)",
+            f"Great: {counts.get('Great', 0)} ({percentages.get('Great', 0.0):.1f}%)",
+            f"Good: {counts.get('Good', 0)} ({percentages.get('Good', 0.0):.1f}%)",
+            f"Bad: {counts.get('Bad', 0)} ({percentages.get('Bad', 0.0):.1f}%)",
+            f"Miss: {counts.get('Miss', 0)} ({percentages.get('Miss', 0.0):.1f}%)",
+            f"Perfect Early: {perfect_early} | Perfect Late: {perfect_late}",
         ]
         self._draw_text_block(lines, start_y=150)
         self._draw_menu_items(RESULTS_MENU, self._results_index, start_y=360)
 
-    def _draw_performance(self) -> None:
+    def _draw_performance_list(self) -> None:
         self.screen.fill((12, 12, 18))
-        title = self.title_font.render("Performance", True, (240, 240, 240))
+        title = self.title_font.render("Performance History", True, (240, 240, 240))
         self.screen.blit(title, title.get_rect(center=(self.config.width // 2, 80)))
-        summary = self._last_session_summary
-        if not summary:
+        if not self._performance_history:
             self._draw_text_block(["No sessions recorded yet."], start_y=180)
-            self._draw_footer("Press back to return")
+            self._draw_footer("Back to return")
             return
-        self._draw_text_block(
-            [
-                f"Total Notes: {int(summary.get('total', 0))}",
-                f"Hit Rate: {float(summary.get('hit_rate', 0.0)):.1f}%",
-                f"Clean Rate: {float(summary.get('clean_rate', 0.0)):.1f}%",
-            ],
-            start_y=150,
-        )
-        pattern_stats = summary.get("pattern_stats", {})
-        if isinstance(pattern_stats, dict) and pattern_stats:
-            items = []
-            for name, stats in sorted(pattern_stats.items()):
-                clean_rate = float(stats.get("clean_rate", 0.0))
-                items.append(f"{name}: {clean_rate:.1f}% clean")
-            self._draw_text_block(items[:6], start_y=260)
-        self._draw_footer("Back to return")
+        max_items = 7
+        total_items = len(self._performance_history)
+        start_index = max(0, self._performance_index - (max_items // 2))
+        end_index = min(total_items, start_index + max_items)
+        items = []
+        for index in range(start_index, end_index):
+            entry = self._performance_history[index]
+            ended_at = str(entry.get("ended_at", ""))[:19].replace("T", " ")
+            hit_rate = float(entry.get("hit_rate", 0.0))
+            label = f"{ended_at} | Hit {hit_rate:.1f}%"
+            items.append(label)
+        selected = self._performance_index - start_index
+        self._draw_menu_items(items, selected, start_y=170)
+        self._draw_footer("Select a session for details")
+
+    def _draw_performance_detail(self) -> None:
+        self.screen.fill((12, 12, 18))
+        title = self.title_font.render("Performance Detail", True, (240, 240, 240))
+        self.screen.blit(title, title.get_rect(center=(self.config.width // 2, 80)))
+        summary = self._current_performance()
+        if not summary:
+            self._draw_text_block(["No session selected."], start_y=180)
+            self._draw_footer("Back to return")
+            return
+        counts = summary.get("counts", {}) if isinstance(summary.get("counts", {}), dict) else {}
+        percentages = summary.get("percentages", {}) if isinstance(summary.get("percentages", {}), dict) else {}
+        perfect_early = int(summary.get("perfect_early", 0))
+        perfect_late = int(summary.get("perfect_late", 0))
+        miss_count = counts.get("Miss", 0)
+        header = [
+            f"Total Notes: {int(summary.get('total', 0))}",
+            f"Hit Rate: {float(summary.get('hit_rate', 0.0)):.1f}%",
+            f"Perfect: {counts.get('Perfect', 0)} ({percentages.get('Perfect', 0.0):.1f}%)",
+            f"Great: {counts.get('Great', 0)} ({percentages.get('Great', 0.0):.1f}%)",
+            f"Good: {counts.get('Good', 0)} ({percentages.get('Good', 0.0):.1f}%)",
+            f"Bad: {counts.get('Bad', 0)} ({percentages.get('Bad', 0.0):.1f}%)",
+            f"Miss: {miss_count} ({percentages.get('Miss', 0.0):.1f}%)",
+            f"Perfect Early: {perfect_early} | Perfect Late: {perfect_late}",
+        ]
+        self._draw_text_block_at(header, start_y=130, x=60, line_height=34)
+        sections = self._current_sections()
+        if sections:
+            current = sections[self._performance_section_index % len(sections)]
+            label = str(current.get("label", ""))
+            counts = current.get("counts", {}) if isinstance(current.get("counts", {}), dict) else {}
+            percentages = current.get("percentages", {}) if isinstance(current.get("percentages", {}), dict) else {}
+            section_lines = [
+                f"Section: {label}",
+                f"Hit Rate: {float(current.get('hit_rate', 0.0)):.1f}%",
+                f"Clean: {float(current.get('clean_rate', 0.0)):.1f}%",
+                f"Perfect: {counts.get('Perfect', 0)} ({percentages.get('Perfect', 0.0):.1f}%)",
+                f"Great: {counts.get('Great', 0)} ({percentages.get('Great', 0.0):.1f}%)",
+                f"Good: {counts.get('Good', 0)} ({percentages.get('Good', 0.0):.1f}%)",
+                f"Bad: {counts.get('Bad', 0)} ({percentages.get('Bad', 0.0):.1f}%)",
+            ]
+            self._draw_text_block_at(section_lines, start_y=130, x=self.config.width // 2 + 40, line_height=34)
+        if sections:
+            pattern_items = [
+                f"{item.get('label', '')}: {float(item.get('hit_rate', 0.0)):.1f}%"
+                for item in sections
+            ]
+            pattern_line = " | ".join(pattern_items[:3])
+            if len(pattern_items) > 3:
+                pattern_line += " | ..."
+            pattern_text = self.small_font.render(f"Patterns: {pattern_line}", True, (190, 190, 190))
+            pattern_y = self.config.height - 260
+            self.screen.blit(pattern_text, (60, pattern_y))
+        offsets = summary.get("offsets", []) if isinstance(summary.get("offsets", []), list) else []
+        if offsets:
+            chart_rect = pygame.Rect(60, self.config.height - 220, self.config.width - 120, 150)
+            self._draw_offset_chart(offsets, chart_rect)
+        self._draw_footer("Up/Down: sections | Select: practice | Back: home")
+
+    def _draw_tuning(self) -> None:
+        self.screen.fill((12, 12, 18))
+        lane_width = self.config.width // 4
+        lane_inner_width = lane_width - 2
+        judgment_line_y = self.config.height - JUDGMENT_LINE_OFFSET
+        for index in range(4):
+            x = index * lane_width
+            pygame.draw.rect(self.screen, (32, 32, 44), (x, 0, lane_inner_width, self.config.height))
+            pygame.draw.rect(self.screen, (70, 70, 92), (x, judgment_line_y, lane_inner_width, 10))
+        now_ms = pygame.time.get_ticks() - self.start_ticks
+        travel_progress = 0.0
+        if self.note_travel_ms > 0:
+            travel_progress = ((now_ms - self._tuning_note_start_ms) % self.note_travel_ms) / self.note_travel_ms
+        spawn_y = -40
+        y = int(spawn_y + travel_progress * (judgment_line_y - spawn_y))
+        lane_x = lane_width
+        note_half_height = NOTE_HEIGHT // 2
+        note_rect = pygame.Rect(lane_x, y - note_half_height, lane_inner_width, NOTE_HEIGHT)
+        pygame.draw.rect(self.screen, (135, 206, 250), note_rect, border_radius=8)
+        pygame.draw.rect(self.screen, (255, 255, 255), note_rect, width=2, border_radius=8)
+        param_label = "Note Travel (ms)" if self._tuning_param == "note_travel_ms" else "Input Offset (ms)"
+        value = self.note_travel_ms if self._tuning_param == "note_travel_ms" else self.input_offset_ms
+        header = self.title_font.render(f"Tuning: {param_label}", True, (240, 240, 240))
+        self.screen.blit(header, header.get_rect(center=(self.config.width // 2, 70)))
+        value_text = self.font.render(f"Value: {value}", True, (220, 220, 220))
+        self.screen.blit(value_text, value_text.get_rect(center=(self.config.width // 2, 120)))
+        self._draw_footer("Lane1: - | Lane2: hit | Lane3: + | Lane4: back")
+        self._draw_judgment(now_ms)
+
+    def _current_performance(self) -> dict[str, object] | None:
+        if not self._performance_history:
+            return None
+        self._performance_index = max(0, min(self._performance_index, len(self._performance_history) - 1))
+        entry = self._performance_history[self._performance_index]
+        return entry if isinstance(entry, dict) else None
+
+    def _current_sections(self) -> list[dict[str, object]]:
+        summary = self._current_performance()
+        if not summary:
+            return []
+        sections = summary.get("sections", [])
+        if isinstance(sections, list):
+            return [section for section in sections if isinstance(section, dict)]
+        return []
 
     def _draw_menu(self, title: str, items: tuple[str, ...] | list[str], selected_index: int) -> None:
         self.screen.fill((12, 12, 18))
@@ -754,21 +1010,105 @@ class GameEngine:
             text = self.font.render(item, True, color)
             rect = text.get_rect(center=(self.config.width // 2, y))
             if is_selected:
-                highlight = rect.inflate(30, 14)
+                highlight = rect.inflate(40, 18)
                 pygame.draw.rect(self.screen, (40, 40, 60), highlight, border_radius=8)
             self.screen.blit(text, rect)
-            y += 44
+            y += 52
 
     def _draw_text_block(self, lines: list[str], start_y: int) -> None:
         y = start_y
         for line in lines:
             text = self.font.render(line, True, (210, 210, 210))
             self.screen.blit(text, (80, y))
-            y += 32
+            y += 36
+
+    def _draw_text_block_at(self, lines: list[str], start_y: int, x: int, line_height: int = 36) -> None:
+        y = start_y
+        for line in lines:
+            text = self.font.render(line, True, (210, 210, 210))
+            self.screen.blit(text, (x, y))
+            y += line_height
 
     def _draw_footer(self, text: str) -> None:
         hint = self.small_font.render(text, True, (160, 160, 160))
         self.screen.blit(hint, (40, self.config.height - 50))
+
+    def _draw_offset_chart(self, offsets: list[int], rect: pygame.Rect) -> None:
+        if len(offsets) < 2:
+            return
+        max_abs = max(1, max(abs(min(offsets)), abs(max(offsets)), MAX_JUDGE_WINDOW_MS))
+        mid_y = rect.centery
+        scale_y = (rect.height / 2 - 4) / max_abs
+        step_x = rect.width / max(1, len(offsets) - 1)
+        points = []
+        for index, offset in enumerate(offsets):
+            x = rect.left + int(index * step_x)
+            y = int(mid_y - (offset * scale_y))
+            points.append((x, y))
+        pygame.draw.rect(self.screen, (40, 40, 60), rect, width=1)
+        pygame.draw.line(self.screen, (90, 90, 120), (rect.left, mid_y), (rect.right, mid_y), width=1)
+        pygame.draw.lines(self.screen, (135, 206, 250), False, points, width=2)
+
+    def _start_tuning(self, param: str) -> None:
+        self._tuning_param = param
+        self._tuning_note_start_ms = pygame.time.get_ticks() - self.start_ticks
+        self._tuning_last_adjust_ms = self._tuning_note_start_ms
+        self._set_last_judgment("", self._tuning_note_start_ms)
+        self._ui_state = "tuning"
+
+    def _handle_tuning_input(self, event: InputEvent) -> None:
+        if event.action == "menu_back":
+            self._ui_state = "settings"
+            return
+        if event.action in {"menu_left", "menu_right"}:
+            direction = -1 if event.action == "menu_left" else 1
+            self._apply_tuning_step(direction)
+            return
+        if event.zone is not None and event.pressed:
+            if event.zone == 4:
+                self._ui_state = "settings"
+            elif event.zone == 2:
+                self._handle_tuning_press(event.timestamp_ms)
+
+    def _handle_tuning_press(self, actual_time_ms: int) -> None:
+        if self.note_travel_ms <= 0:
+            return
+        adjusted_time_ms = self._adjust_time(actual_time_ms)
+        elapsed_ms = adjusted_time_ms - self._tuning_note_start_ms
+        cycle_index = max(0, elapsed_ms // self.note_travel_ms)
+        expected_time = self._tuning_note_start_ms + (cycle_index + 1) * self.note_travel_ms
+        result = self._coerce_hit_judgment(judge_timing(expected_time, adjusted_time_ms))
+        self._set_last_judgment(result.judgment, actual_time_ms)
+
+    def _update_tuning(self, now_ms: int) -> None:
+        if self._tuning_param is None:
+            return
+        interval_ms = 80
+        if now_ms - self._tuning_last_adjust_ms < interval_ms:
+            return
+        direction = 0
+        if 3 in self._active_zones and 1 in self._active_zones:
+            direction = 0
+        elif 3 in self._active_zones:
+            direction = 1
+        elif 1 in self._active_zones:
+            direction = -1
+        if direction == 0:
+            return
+        self._tuning_last_adjust_ms = now_ms
+        self._apply_tuning_step(direction)
+
+    def _apply_tuning_step(self, direction: int) -> None:
+        if self._tuning_param == "note_travel_ms":
+            self.note_travel_ms = max(
+                NOTE_TRAVEL_MIN_MS,
+                min(NOTE_TRAVEL_MAX_MS, self.note_travel_ms + (direction * NOTE_TRAVEL_STEP_MS)),
+            )
+        elif self._tuning_param == "input_offset_ms":
+            self.input_offset_ms = max(
+                INPUT_OFFSET_MIN_MS,
+                min(INPUT_OFFSET_MAX_MS, self.input_offset_ms + (direction * INPUT_OFFSET_STEP_MS)),
+            )
 
     def _draw_judgment(self, now_ms: int) -> None:
         if not self.last_judgment:
